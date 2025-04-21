@@ -4,7 +4,7 @@ import java.lang.annotation.Inherited;
 import javax.annotation.processing.Generated;
 
 @Entity
-@Table(name ="garajes")
+@Table(name ="Libros")
 @Data 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,8 +14,11 @@ public class Libro extends RepresentationModel<Libro> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int libro_id;
-    @NotNull(message = "El nombre es obligatorio y no puede ser null")
     private String titulo;
+    @NotNull(message = "El isbn es obligatorio y no puede ser null")
     private String isbn;
-    private String autor;   
+    private String autor;
+    private String edicion;
+    private String editorial;
+    private Boolean estado; //true si activo false en caso contrario 
 }
