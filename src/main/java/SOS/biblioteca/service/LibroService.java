@@ -9,6 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import SOS.biblioteca.repository.LibroRepository;
+import lombok.AllArgsConstructor;
+
 import SOS.biblioteca.model.*;
 import SOS.biblioteca.repository.LibroRepository;
 import lombok.AllArgsConstructor;

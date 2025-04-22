@@ -1,13 +1,15 @@
 package SOS.biblioteca.repository;
 
-import SOS.biblioteca.model.*;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface LibroRepository extends JpaRepository<Libro, Integer>{
+import SOS.biblioteca.model.Libro;
 
-    // Buscar si existe por nombre de usuario
-    // El nombre del campo tiene que ser el mismo que el campo de la tabla
-    boolean existsByNombre(String nombre);
-
+public interface LibroRepository extends JpaRepository<Libro, Integer> {
+    
+    @Query(value = "SELECT * FROM libros WHERE titulo = ?1", nativeQuery = true)
+    Optional<Libro> findByTitle(@Param("titulo") String titulo);
 }
