@@ -3,7 +3,10 @@ package SOS.biblioteca.model;
 import java.beans.Transient;
 import java.lang.annotation.Inherited;
 
-import javax.annotation.processing.Generated;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.hateoas.RepresentationModel;
+import lombok.*;
 
 @Entity
 @Table(name ="Libros")

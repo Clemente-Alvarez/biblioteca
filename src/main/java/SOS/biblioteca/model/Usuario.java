@@ -1,6 +1,13 @@
 package SOS.biblioteca.model;
 
-import javax.annotation.processing.Generated;
+import java.beans.Transient;
+import java.lang.annotation.Inherited;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.hateoas.RepresentationModel;
+import lombok.*;
+
 
 @Entity
 @Table(name ="Usuarios")
