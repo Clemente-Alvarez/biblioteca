@@ -26,5 +26,10 @@ public class LibroService {
         return repository.save(libro);
     }
 
+    public void deleteLibro(int idLibro) {
+        repository.deleteById(idLibro);
+    }
+
+
 
 }
