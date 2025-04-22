@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 
 import SOS.biblioteca.repository.LibroRepository;
 import SOS.biblioteca.model.Libro;
+import SOS.biblioteca.model.Usuario;
 
 @Service // Marcamos la clase compo componente de servicio
 @AllArgsConstructor
@@ -32,7 +33,7 @@ public class LibroService {
     }
 
     public boolean existe(String title) {
-        return repository.existsByTitulo(title);
+        return repository.existsBytitulo(title);
     }
 
     public Optional<Libro> buscarPorId(int id){
