@@ -13,6 +13,7 @@ import SOS.biblioteca.repository.LibroRepository;
 import lombok.AllArgsConstructor;
 
 import SOS.biblioteca.model.Libro;
+import SOS.biblioteca.model.Usuario;
 
 @Service // Marcamos la clase compo componente de servicio
 @AllArgsConstructor
@@ -27,6 +28,23 @@ public class LibroService {
     public void deleteLibro(int idLibro) {
         repository.deleteById(idLibro);
     }
+
+    public List<Libro> getAll(){
+        return repository.findAll(); 
+    }
+
+    public boolean existeLibroPorId(int id) {
+        return repository.existsById(id);
+    }
+
+    public boolean existeLibro(String nombre) {
+        return repository.existsBytitulo(nombre);
+    }
+
+    public Optional<Usuario> buscarPorId(int id) {
+        return repository.findById(id);
+    }
+
 
 
 

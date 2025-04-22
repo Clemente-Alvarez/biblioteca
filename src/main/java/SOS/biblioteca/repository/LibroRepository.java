@@ -10,6 +10,7 @@ import SOS.biblioteca.model.Libro;
 
 public interface LibroRepository extends JpaRepository<Libro, Integer> {
     
-    @Query(value = "SELECT * FROM libros WHERE titulo = ?1", nativeQuery = true)
-    Optional<Libro> findByTitle(@Param("titulo") String titulo);
+    // Buscar si existe por nombre de usuario
+    // El nombre del campo tiene que ser el mismo que el campo de la tabla
+    boolean existsBytitulo(String titulo);
 }
