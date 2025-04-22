@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import SOS.biblioteca.model.*;
+import SOS.biblioteca.model.Usuario;
 import SOS.biblioteca.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
 
