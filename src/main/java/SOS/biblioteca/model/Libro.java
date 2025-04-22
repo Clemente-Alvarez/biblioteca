@@ -1,3 +1,5 @@
+package SOS.biblioteca.model;
+
 import java.beans.Transient;
 import java.lang.annotation.Inherited;
 

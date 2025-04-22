@@ -1,4 +1,4 @@
-
+package SOS.biblioteca.model;
 @Entity
 @Table(name ="Ejemplares")
 @Data 

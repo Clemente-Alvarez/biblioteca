@@ -1,3 +1,5 @@
+package SOS.biblioteca.model;
+
 import javax.annotation.processing.Generated;
 
 @Entity
