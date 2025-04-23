@@ -17,10 +17,14 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Integer> {
     @Query(value = "SELECT * FROM prestamo WHERE matricula = ?1 AND devuelto = ?2", nativeQuery = true)
     List<Prestamo> findByUser_id(@Param("matricula") Integer matricula, @Param("devuelto") Integer devuelto);
 
+
+    // Devuelve una lista de prestamos activos dado un intervalo de fechas y una matricula
     @Query(value = "SELECT * FROM prestamo " +
-           "WHERE fecha_inicio <= ?2 " +
-           "AND fecha_devolucion >= ?1", nativeQuery = true)
-    List<Prestamo> findByInterval(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+           "WHERE fecha_inicio <= ?3 " +
+           "AND fecha_devolucion >= ?2" + 
+           "AND matricula = ?1 " + 
+           "AND devuelto = false", nativeQuery = true)
+    List<Prestamo> findByIntervalAndUser_id(@Param("matricula") Integer matricula, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
 
 }

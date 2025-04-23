@@ -14,8 +14,16 @@ import lombok.AllArgsConstructor;
 public class PrestamoService {
      private final PrestamoRepository repository;
 
-    public Prestamo createPrestamo(Prestamo prestamo) {
+    public Prestamo create(Prestamo prestamo) {
         return repository.save(prestamo);
+    }
+
+    public boolean exists(int id) {
+        return repository.existsById(id);
+    }
+
+    public Optional<Prestamo> search(int id) {
+        return repository.findById(id);
     }
 
     public List<Prestamo> getByUser_id(Integer user_id){
@@ -23,21 +31,12 @@ public class PrestamoService {
     }
 
     // Devuelve una lista de prestamos filtrado por el estado y matricula del usuario. 
-    public List<Prestamo> getByUser_id(Integer user_id, Integer devuelto){
+    public List<Prestamo> getByUser_idAndStatus(Integer user_id, Integer devuelto){
         return repository.findByUser_id(user_id , devuelto); 
     }
 
-    public List<Prestamo> getByInterval(LocalDate startDate, LocalDate endDate){
-        return repository.findByInterval(startDate, endDate); 
+    // Devuelve una lista de prestamos activos dado un intervalo de fechas y una matricula
+    public List<Prestamo> getByInterval(Integer user_id, LocalDate startDate, LocalDate endDate){
+        return repository.findByIntervalAndUser_id(user_id, startDate, endDate); 
     }
-
-    public boolean existePrestamoPorId(int id) {
-        return repository.existsById(id);
-    }
-
-    public Optional<Prestamo> buscarPorId(int id) {
-        return repository.findById(id);
-    }
-
-
 }

@@ -23,19 +23,15 @@ public class UsuarioService {
         return repository.save(usuario);
     }
 
-    public List<Usuario> getAll(){
-        return repository.findAll(); 
-    }
-
-    public boolean existePorId(int id) {
+    public boolean exists(int id) {
         return repository.existsById(id);
     }
 
-    public boolean existe(String nombre) {
+    public boolean exists(String nombre) {
         return repository.existsByNombre(nombre);
     }
 
-    public Optional<Usuario> buscarPorId(int id) {
+    public Optional<Usuario> search(int id) {
         return repository.findById(id);
     }
 
@@ -43,4 +39,7 @@ public class UsuarioService {
         repository.deleteById(id);
     }
     
+    public List<Usuario> getAll(){
+        return repository.findAll(); 
+    }
 }

@@ -20,6 +20,6 @@ public class Prestamo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Prestamo_id;
     private String fecha_inicio;
-    private String echa_debolucion;
-    private Boolean debuelto;
+    private String echa_devolucion;
+    private Boolean devuelto;
 }

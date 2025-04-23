@@ -15,8 +15,24 @@ public class LibroService {
 
     private final LibroRepository repository;
 
-    public Libro createLibro(Libro libro) {
+    public Libro create(Libro libro) {
         return repository.save(libro);
+    }
+
+    public boolean exists(String titulo) {
+        return repository.existsByTitulo(titulo);
+    }
+
+    public boolean exists(int id) {
+        return repository.existsById(id);
+    }
+
+    public Optional<Libro> search(int id){
+        return repository.findById(id);
+    }
+
+    public void delete(int id){
+        repository.deleteById(id);
     }
 
     public List<Libro> getAll(){
@@ -27,29 +43,13 @@ public class LibroService {
         return repository.findByTituloRegex(titulo); 
     }
 
-    public List<Libro> getByTitulo(String titulo, String estado){
+    public List<Libro> getByTituloAndEstado(String titulo, String estado){
         return repository.findByTituloRegex(titulo , estado); 
-    }
-
-    public boolean existeLibroPorId(int id) {
-        return repository.existsById(id);
-    }
-
-    public Optional<Libro> buscarPorId(int id) {
-    public boolean existe(String title) {
-        return repository.existsBytitulo(title);
-    }
-
-    public Optional<Libro> buscarPorId(int id){
-        return repository.findById(id);
     }
 
     // Devuelve los libros prestados previamente por un usuario. 
     public List<Libro> getLibrosPrestadosByUser_id(Integer matricula){
         return repository.findBooksByUser_id(matricula); 
-    }
-    public void delete(int id){
-        repository.deleteById(id);
     }
 
 }
