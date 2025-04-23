@@ -19,19 +19,19 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
 
-    public Usuario createUsuario(Usuario usuario) {
+    public Usuario create(Usuario usuario) {
         return repository.save(usuario);
     }
 
-    public List<Usuario> getAllUsuarios(){
+    public List<Usuario> getAll(){
         return repository.findAll(); 
     }
 
-    public boolean existeUsuarioPorId(int id) {
+    public boolean existePorId(int id) {
         return repository.existsById(id);
     }
 
-    public boolean existeUsuario(String nombre) {
+    public boolean existe(String nombre) {
         return repository.existsByNombre(nombre);
     }
 
@@ -39,10 +39,8 @@ public class UsuarioService {
         return repository.findById(id);
     }
 
-    public void eliminarUsuario(int id) {
+    public void delete(int id) {
         repository.deleteById(id);
     }
-
-
     
 }

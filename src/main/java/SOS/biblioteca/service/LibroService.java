@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-
-import SOS.biblioteca.repository.LibroRepository;
 import lombok.AllArgsConstructor;
 
+import SOS.biblioteca.repository.LibroRepository;
 import SOS.biblioteca.model.Libro;
 
 @Service // Marcamos la clase compo componente de servicio
@@ -20,12 +19,8 @@ public class LibroService {
         return repository.save(libro);
     }
 
-    public void deleteLibro(int idLibro) {
-        repository.deleteById(idLibro);
-    }
-
     public List<Libro> getAll(){
-        return repository.findAll(); 
+        return repository.findAll();
     }
 
     public List<Libro> getByTitulo(String titulo){
@@ -41,6 +36,11 @@ public class LibroService {
     }
 
     public Optional<Libro> buscarPorId(int id) {
+    public boolean existe(String title) {
+        return repository.existsBytitulo(title);
+    }
+
+    public Optional<Libro> buscarPorId(int id){
         return repository.findById(id);
     }
 
@@ -48,7 +48,8 @@ public class LibroService {
     public List<Libro> getLibrosPrestadosByUser_id(Integer matricula){
         return repository.findBooksByUser_id(matricula); 
     }
-
-
+    public void delete(int id){
+        repository.deleteById(id);
+    }
 
 }

@@ -1,10 +1,13 @@
 package SOS.biblioteca.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.beans.Transient;
+import java.lang.annotation.Inherited;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.hateoas.RepresentationModel;
+import lombok.*;
+
 
 @Entity
 @Table(name ="Ejemplares")
