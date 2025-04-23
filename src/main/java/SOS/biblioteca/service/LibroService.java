@@ -1,19 +1,14 @@
 package SOS.biblioteca.service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.List; 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import SOS.biblioteca.repository.LibroRepository;
 import lombok.AllArgsConstructor;
 
 import SOS.biblioteca.model.Libro;
-import SOS.biblioteca.model.Usuario;
 
 @Service // Marcamos la clase compo componente de servicio
 @AllArgsConstructor
@@ -33,18 +28,26 @@ public class LibroService {
         return repository.findAll(); 
     }
 
+    public List<Libro> getByTitulo(String titulo){
+        return repository.findByTituloRegex(titulo); 
+    }
+
+    public List<Libro> getByTitulo(String titulo, String estado){
+        return repository.findByTituloRegex(titulo , estado); 
+    }
+
     public boolean existeLibroPorId(int id) {
         return repository.existsById(id);
     }
 
-    public boolean existeLibro(String nombre) {
-        return repository.existsBytitulo(nombre);
-    }
-
-    public Optional<Usuario> buscarPorId(int id) {
+    public Optional<Libro> buscarPorId(int id) {
         return repository.findById(id);
     }
 
+    // Devuelve los libros prestados previamente por un usuario. 
+    public List<Libro> getLibrosPrestadosByUser_id(Integer matricula){
+        return repository.findBooksByUser_id(matricula); 
+    }
 
 
 

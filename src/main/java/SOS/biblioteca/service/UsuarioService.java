@@ -19,7 +19,7 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
 
-    public Usuario createUser(Usuario usuario) {
+    public Usuario createUsuario(Usuario usuario) {
         return repository.save(usuario);
     }
 
@@ -39,7 +39,7 @@ public class UsuarioService {
         return repository.findById(id);
     }
 
-    public void eliminarEmpleado(int id) {
+    public void eliminarUsuario(int id) {
         repository.deleteById(id);
     }
 
