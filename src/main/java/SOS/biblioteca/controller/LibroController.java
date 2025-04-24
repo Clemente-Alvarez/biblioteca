@@ -25,12 +25,12 @@ public class LibroController {
 
     @PostMapping()
     public ResponseEntity<Void> nuevoLibro(@Valid @RequestBody Libro newLibro){
-        if(!service.exists(newLibro.getTitulo())){
+        if(!service.exists(newLibro.getLibro_id())){
             Libro libro = service.create(newLibro);
 
-            return ResponseEntity.created(linkTo(LibroController.class).slash(libro.getIsbn()).toUri()).build();
+            return ResponseEntity.created(linkTo(LibroController.class).slash(libro.getLibro_id()).toUri()).build();
         }
-        throw new LibroExistsException(newLibro.getTitulo());
+        throw new LibroExistsException(newLibro.getLibro_id());
     }
     
 }
