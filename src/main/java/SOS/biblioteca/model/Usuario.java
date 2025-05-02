@@ -15,7 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Usuario {
+public class Usuario extends RepresentationModel<Usuario>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

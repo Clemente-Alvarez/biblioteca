@@ -14,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Prestamo {
+public class Prestamo extends RepresentationModel<Prestamo>{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
