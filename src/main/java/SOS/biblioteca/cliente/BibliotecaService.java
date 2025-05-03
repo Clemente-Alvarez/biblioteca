@@ -234,7 +234,7 @@ public class BibliotecaService {
         webClient.put()
                 .uri("/usuarios/{matricula}/prestamo/{prestamo-id}", matricula, prestamo_id )
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(prestamo), Usuario.class)
+                .body(Mono.just(prestamo), Prestamo.class)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, response -> response
                         .bodyToMono(String.class)
@@ -249,6 +249,280 @@ public class BibliotecaService {
                 .block(); // Bloquea hasta recibir la respuesta
     }
 
+    // /libro
+    public void getLibros() {
+        Libro libro = webClient.get()
+                .uri("/Libros")
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                        .then(Mono.empty()) // Permite continuar la ejecución
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                        .then(Mono.empty()))
+                .bodyToMono(Libro.class)
+                .block();
 
+        if (libro != null) {
+            Links selfLink = libro.getLinks();
+            System.out.println("El Usuario con matricula: " + libro.getLibroId() + " y nombre: "
+                    + libro.getTitulo()
+                    + " se encuentra disponible en el enlace: " + selfLink);
+        }
+    }
+
+    public void postLibro(String isbn, String titulo, String autor, String edicion, String editorial) {
+        Libro libro = new Libro();
+        libro.setIsbn(isbn);
+        libro.setTitulo(titulo);
+        libro.setAutor(autor);
+        libro.setEdicion(edicion);
+        libro.setEditorial(editorial);
+        try {
+            String referencia = webClient.post()
+                    .uri("/libros")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(libro), Usuario.class)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                            .bodyToMono(String.class)
+                            .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                            .then(Mono.empty())
+                    )
+                    .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                            .bodyToMono(String.class)
+                            .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                            .then(Mono.empty()))
+                    .toBodilessEntity()
+                    .map(response -> {
+                        if (response.getHeaders().getLocation() != null) {
+                            return response.getHeaders().getLocation().toString();
+                        } else {
+                            throw new RuntimeException(
+                                    "No se recibió una URL en la cabecera Location");
+                        }
+                    })
+                    .block();
+            if (referencia != null) {
+                System.out.println(referencia);
+            }
+        } catch (RuntimeException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+
+    // /libros/{libro-id}
+
+    public void getLibro(int libroId) {
+
+        Libro libro = webClient.get()
+                .uri("/libros/" + libroId)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                        .then(Mono.empty()) // Permite continuar la ejecución
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                        .then(Mono.empty()))
+                .bodyToMono(Libro.class)
+                .block(); // Usamos block() para obtener la respuesta de forma síncrona
+
+        if (libro != null) {
+            Links selfLink = libro.getLinks();
+            System.out.println("El libro con Id: " + libro.getLibroId() + " y titulo: "
+                    + libro.getTitulo()
+                    + " se encuentra disponible en el enlace: " + selfLink);
+        }
+    }
+
+    public void putLibro(int libroId, String isbn, String titulo, String autor, String edicion, String editorial) {
+        Libro libro = new Libro();
+        libro.setIsbn(isbn);
+        libro.setTitulo(titulo);
+        libro.setAutor(autor);
+        libro.setEdicion(edicion);
+        libro.setEditorial(editorial);
+
+        webClient.put()
+                .uri("/libro/{libro-id}", libroId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(libro), Libro.class)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                        .then(Mono.empty()) // Permite continuar la ejecución
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                        .then(Mono.empty()))
+                .toBodilessEntity() // Obtiene solo la respuesta HTTP sin cuerpo
+                .block(); // Bloquea hasta recibir la respuesta
+    }
+
+    public void deleteLibro(int libroId) {
+        webClient.delete()
+                .uri("/libros/{libro-id}", libroId)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                        .then(Mono.empty()) // Permite continuar la ejecución
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                        .then(Mono.empty()))
+                .toBodilessEntity() // Obtiene solo la respuesta HTTP sin cuerpo
+                .block();// Bloquea para obtener el resultado sincrónicamente
+    }
+
+    // /libro//{libro-id}/ejemplares
+
+    public void postEjemplar(int ejemplarId, int libroId, String Estado) {
+
+        Ejemplar ejemplar = new Ejemplar();
+        ejemplar.setEjemplarId(ejemplarId);
+        ejemplar.setLibroId(libroId);
+        ejemplar.setEstado(Estado);
+
+        try {
+            String referencia = webClient.post()
+                    .uri("/libros/{libro-id}/ejemplares", ejemplarId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Mono.just(ejemplar), Ejemplar.class)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                            .bodyToMono(String.class)
+                            .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                            .then(Mono.empty()) // Permite continuar la ejecución
+                    )
+                    .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                            .bodyToMono(String.class)
+                            .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                            .then(Mono.empty()))
+                    .toBodilessEntity() // Obtiene solo la respuesta HTTP sin cuerpo
+                    .map(response -> {
+                        if (response.getHeaders().getLocation() != null) {
+                            return response.getHeaders().getLocation().toString();
+                        } else {
+                            throw new RuntimeException(
+                                    "No se recibió una URL en la cabecera Location");
+                        }
+                    })
+                    .block();// Bloquea para obtener el resultado sincrónicamente
+            if (referencia != null) {
+                System.out.println(referencia);
+            }
+        } catch (RuntimeException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
+
+    public void getEjemplares(int ejemplarId) {
+
+        Ejemplar ejemplar = webClient.get()
+                .uri("/libros/{libro-id}/ejemplares", ejemplarId)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                        .then(Mono.empty()) // Permite continuar la ejecución
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                        .then(Mono.empty()))
+                .bodyToMono(Ejemplar.class)
+                .block(); // Usamos block() para obtener la respuesta de forma síncrona
+
+        if (ejemplar != null) {
+            Links selfLink = ejemplar.getLinks();
+            System.out.println("El Ejemplar con id: " + ejemplar.getEjemplarId() + ", libroId: "
+                    + ejemplar.getLibroId() + " y estado: " + ejemplar.getEstado()
+                    + " se encuentra disponible en el enlace: " + selfLink);
+
+        }
+
+    }
+
+    // /libro//{libro-id}/ejemplares/{ejemplar-id}
+
+    public void putEjemplar(int ejemplarId, int libroId, String Estado) {
+        Ejemplar ejemplar = new Ejemplar();
+
+        ejemplar.setEjemplarId(ejemplarId);
+        ejemplar.setLibroId(libroId);
+        ejemplar.setEstado(Estado);
+
+        webClient.put()
+                .uri("/libro//{libro-id}/ejemplares/{ejemplar-id}", libroId, ejemplarId )
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(ejemplar), Ejemplar.class)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                        .then(Mono.empty()) // Permite continuar la ejecución
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                        .then(Mono.empty()))
+                .toBodilessEntity() // Obtiene solo la respuesta HTTP sin cuerpo
+                .block(); // Bloquea hasta recibir la respuesta
+    }
+
+    public void getEjemplar(int libroId, int ejemplarId) {
+
+        Ejemplar ejemplar = webClient.get()
+                .uri("/libro//{libro-id}/ejemplares/" + ejemplarId, libroId)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                        .then(Mono.empty()) // Permite continuar la ejecución
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                        .then(Mono.empty()))
+                .bodyToMono(Ejemplar.class)
+                .block(); // Usamos block() para obtener la respuesta de forma síncrona
+
+        if (ejemplar != null) {
+            Links selfLink = ejemplar.getLinks();
+            System.out.println("El Ejemplar con Id: " + ejemplar.getEjemplarId() + " y libroId: "
+                    + ejemplar.getLibroId()
+                    + " se encuentra disponible en el enlace: " + selfLink);
+        }
+    }
+
+    public void deleteEjemplar(int libroId, int ejemplarId) {
+        webClient.delete()
+                .uri("/libro//{libro-id}/ejemplares/", libroId, ejemplarId)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 4xx: " + body))
+                        .then(Mono.empty()) // Permite continuar la ejecución
+                )
+                .onStatus(HttpStatusCode::is5xxServerError, response -> response
+                        .bodyToMono(String.class)
+                        .doOnNext(body -> System.err.println("Error 5xx: " + body))
+                        .then(Mono.empty()))
+                .toBodilessEntity() // Obtiene solo la respuesta HTTP sin cuerpo
+                .block();// Bloquea para obtener el resultado sincrónicamente
+    }
 
 }
+
+
+
