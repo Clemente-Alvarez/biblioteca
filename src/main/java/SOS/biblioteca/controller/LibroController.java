@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import SOS.biblioteca.model.Ejemplar;
+
 import SOS.biblioteca.exceptions.LibroExistsException;
 import SOS.biblioteca.model.Libro;
 import SOS.biblioteca.service.LibroService;
