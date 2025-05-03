@@ -19,6 +19,7 @@ public class Ejemplar extends RepresentationModel<Ejemplar>{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ejemplarId;
+    private int id;
+    private int libroId;
     private String estado; // disponible, prestado o baja
 }

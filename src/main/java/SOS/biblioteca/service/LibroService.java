@@ -27,6 +27,10 @@ public class LibroService {
         return repository.existsById(id);
     }
 
+    public boolean existeLibroPorIsbn(String isbn) {
+        return repository.existsByIsbn(isbn);
+    }
+
     public Optional<Libro> buscarLibroPorId(int id){
         return repository.findById(id);
     }

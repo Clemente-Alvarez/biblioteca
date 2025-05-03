@@ -25,17 +25,17 @@ public class LibroController {
     private final EjemplarService ejemplarService;
     private PagedResourcesAssembler<Libro> pagedResourcesAssembler;
     private LibroModelAssembler libroModelAssembler;
-/*
+
     @PostMapping()
     public ResponseEntity<Void> nuevoLibro(@Valid @RequestBody Libro newLibro){
-        if(!service.exists(newLibro.getLibro_id())){
+        if(!service.existeLibroPorIsbn(newLibro.getIsbn())){
             Libro libro = service.create(newLibro);
 
-            return ResponseEntity.created(linkTo(LibroController.class).slash(libro.getLibro_id()).toUri()).build();
+            return ResponseEntity.created(linkTo(LibroController.class).slash(libro.getId()).toUri()).build();
         }
-        throw new LibroExistsException(newLibro.getLibro_id());
+        throw new LibroExistsException(newLibro.getId());
     }
-*/
+
     @GetMapping(value = "", produces = { "application/json", "application/xml" })
     public ResponseEntity<PagedModel<Libro>> getLibros(
             @RequestParam(defaultValue = "", required = false) String titulo,
@@ -117,6 +117,7 @@ public class LibroController {
                 Libro libro = service.buscarLibroPorId(id)
                                 .orElseThrow(() -> new LibroNotFoundException(id));
                 if(id != ejemplar.getId()) throw new DifferentIdException(id,ejemplar.getId());
+                ejemplar.setLibroId(id);
                 ejemplarService.crearEjemplar(ejemplar);
                 return ResponseEntity.noContent().build();
         }
