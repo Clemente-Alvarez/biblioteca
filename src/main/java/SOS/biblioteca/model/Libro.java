@@ -18,12 +18,17 @@ public class Libro extends RepresentationModel<Libro> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int libroId;
+    private int id;
+    @NotNull(message = "El titulo es obligatorio y no puede ser null")
     private String titulo;
     @NotNull(message = "El isbn es obligatorio y no puede ser null")
     private String isbn;
     private String autor;
     private String edicion;
     private String editorial;
-    private Boolean estado; //true si activo false en caso contrario 
+    private String estado; 
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null
+    private Set<EntityModel<Ejemplar>> listaEjemplares;
+
 }

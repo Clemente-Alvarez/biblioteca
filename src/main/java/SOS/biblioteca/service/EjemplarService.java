@@ -16,23 +16,23 @@ public class EjemplarService {
     
     private final EjemplarRepository repository;
 
-    public Ejemplar create(Ejemplar ejemplar) {
+    public Ejemplar crearEjemplar(Ejemplar ejemplar) {
         return repository.save(ejemplar);
     }
 
-    public void delete(int idEjemplar) {
+    public void eliminarEjemplarPorId(int idEjemplar) {
         repository.deleteById(idEjemplar);
     }
 
-    public boolean exists(int id) {
+    public boolean existeEjemplarPorId(int id) {
         return repository.existsById(id);
     }
 
-    public Optional<Ejemplar> search(int id) {
+    public Optional<Ejemplar> buscarEjemplarPorId(int id) {
         return repository.findById(id);
     }
 
-    public Page<Ejemplar> getByLibroId(Integer libroId){
+    public Page<Ejemplar> buscarEjemplaresPorLibroId(Integer libroId){
         return repository.findByLibroId(libroId); 
     }
 
