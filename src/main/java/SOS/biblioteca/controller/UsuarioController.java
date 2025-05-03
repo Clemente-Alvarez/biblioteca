@@ -25,11 +25,55 @@ public class UsuarioController {
 
     @PostMapping()
     public ResponseEntity<Void> nuevoUsuario(@Valid @RequestBody Usuario newUsuario){
-        if(!service.exists(newUsuario.getMatricula())){
-            Usuario usuario = service.create(newUsuario);
+        if(!service.existeUsuarioPorCorreo(newUsuario.getCorreo())){
+            Usuario usuario = service.crearUsuario(newUsuario);
 
             return ResponseEntity.created(linkTo(UsuarioController.class).slash(usuario.getMatricula()).toUri()).build();
         }
         throw new UsuarioExistsException(newUsuario.getMatricula());
     }
+
+    @GetMapping(value = "", produces = { "application/json", "application/xml" })
+    public ResponseEntity<PagedModel<Empleado>> getUsuarios(
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "2", required = false) int size) {
+
+        Page<Usuario> usuarios = service.buscarUsuarios(page, size);
+
+        // fetch the page object by additionally passing paginable with the filters
+        return ResponseEntity.ok(pagedResourcesAssembler.toModel(usuarios, usuarioModelAssembler));
+    }
+
+    @GetMapping(value = "/{id}", produces = { "application/json", "application/xml", "application/hal+json" })
+    public ResponseEntity<Usuario> getUsuario(@PathVariable Integer id) {
+        Usuario usuario = service.buscarUsuarioPorId(id)
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
+        usuario.add(linkTo(methodOn(UsuarioController.class).getUsuario(id)).withSelfRel());
+        return ResponseEntity.ok(usuario);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> replaceUsuario(@Valid @RequestBody Empleado newUsuario, @PathVariable Integer id) {
+        service.buscarUsuarioPorId(id)
+                .map(Usuario -> {
+                    Usuario.setNombre(newUsuario.getNombre());
+                    Usuario.setFechaNacimiento(newUsuario.getFechaNacimiento());
+                    Usuario.setCorreo(newUsuario.getCorreo());
+                    Usuario.setPenalizacion(newUsuario.getPenalizacion());
+                    return service.crearUsuario(Usuario);
+                })
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteUsuario(@PathVariable Integer id) {
+        if (service.existeUsuarioPorId(id)) {
+            service.eliminarUsuario(id);
+        } else {
+            throw new UsuarioNotFoundException(id);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
 }

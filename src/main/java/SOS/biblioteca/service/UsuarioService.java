@@ -19,27 +19,32 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
 
-    public Usuario create(Usuario usuario) {
+    public Usuario crearUsuario(Usuario usuario) {
         return repository.save(usuario);
     }
 
-    public boolean exists(int id) {
+    public boolean existeUsuarioPorId(int id) {
         return repository.existsById(id);
     }
 
-    public boolean exists(String nombre) {
+    public boolean existeUsuarioPorNombre(String nombre) {
         return repository.existsByNombre(nombre);
     }
 
-    public Optional<Usuario> search(int id) {
+    public boolean existeUsuarioPorCorreo(String correo) {
+        return repository.existsByCorreo(correo);
+    }
+
+    public Optional<Usuario> buscarUsuarioPorId(int id) {
         return repository.findById(id);
     }
 
-    public void delete(int id) {
+    public void eliminarUsuario(int id) {
         repository.deleteById(id);
     }
     
-    public List<Usuario> getAll(){
-        return repository.findAll(); 
+    public List<Usuario> buscarUsuarios(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findAll(pageable); 
     }
 }

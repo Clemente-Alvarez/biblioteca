@@ -12,4 +12,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     // El nombre del campo tiene que ser el mismo que el campo de la tabla
     boolean existsByNombre(String nombre);
 
+    boolean existsByCorreo(String correo);
+
 }
