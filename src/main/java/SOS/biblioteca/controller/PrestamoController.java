@@ -25,12 +25,12 @@ public class PrestamoController {
 
     @PostMapping()
     public ResponseEntity<Void> nuevoPrestamo(@Valid @RequestBody Prestamo newPrestamo){
-        if(!service.exists(newPrestamo.getPrestamo_id())){
+        if(!service.exists(newPrestamo.getPrestamoId())){
             Prestamo prestamo = service.create(newPrestamo);
 
-            return ResponseEntity.created(linkTo(PrestamoController.class).slash(prestamo.getPrestamo_id()).toUri()).build();
+            return ResponseEntity.created(linkTo(PrestamoController.class).slash(prestamo.getPrestamoId()).toUri()).build();
         }
-        throw new PrestamoExistsException(newPrestamo.getPrestamo_id());
+        throw new PrestamoExistsException(newPrestamo.getPrestamoId());
     }
     
 }

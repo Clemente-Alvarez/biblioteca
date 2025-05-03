@@ -268,7 +268,7 @@ public class BibliotecaService {
 
         if (libro != null) {
             Links selfLink = libro.getLinks();
-            System.out.println("El Usuario con matricula: " + libro.getLibroId() + " y nombre: "
+            System.out.println("El Usuario con matricula: " + libro.getId() + " y nombre: "
                     + libro.getTitulo()
                     + " se encuentra disponible en el enlace: " + selfLink);
         }
@@ -335,7 +335,7 @@ public class BibliotecaService {
 
         if (libro != null) {
             Links selfLink = libro.getLinks();
-            System.out.println("El libro con Id: " + libro.getLibroId() + " y titulo: "
+            System.out.println("El libro con Id: " + libro.getId() + " y titulo: "
                     + libro.getTitulo()
                     + " se encuentra disponible en el enlace: " + selfLink);
         }
@@ -389,7 +389,7 @@ public class BibliotecaService {
     public void postEjemplar(int ejemplarId, int libroId, String Estado) {
 
         Ejemplar ejemplar = new Ejemplar();
-        ejemplar.setEjemplarId(ejemplarId);
+        ejemplar.setId(ejemplarId);
         ejemplar.setLibroId(libroId);
         ejemplar.setEstado(Estado);
 
@@ -445,7 +445,7 @@ public class BibliotecaService {
 
         if (ejemplar != null) {
             Links selfLink = ejemplar.getLinks();
-            System.out.println("El Ejemplar con id: " + ejemplar.getEjemplarId() + ", libroId: "
+            System.out.println("El Ejemplar con id: " + ejemplar.getId() + ", libroId: "
                     + ejemplar.getLibroId() + " y estado: " + ejemplar.getEstado()
                     + " se encuentra disponible en el enlace: " + selfLink);
 
@@ -458,7 +458,7 @@ public class BibliotecaService {
     public void putEjemplar(int ejemplarId, int libroId, String Estado) {
         Ejemplar ejemplar = new Ejemplar();
 
-        ejemplar.setEjemplarId(ejemplarId);
+        ejemplar.setId(ejemplarId);
         ejemplar.setLibroId(libroId);
         ejemplar.setEstado(Estado);
 
@@ -499,7 +499,7 @@ public class BibliotecaService {
 
         if (ejemplar != null) {
             Links selfLink = ejemplar.getLinks();
-            System.out.println("El Ejemplar con Id: " + ejemplar.getEjemplarId() + " y libroId: "
+            System.out.println("El Ejemplar con Id: " + ejemplar.getId() + " y libroId: "
                     + ejemplar.getLibroId()
                     + " se encuentra disponible en el enlace: " + selfLink);
         }
