@@ -15,23 +15,23 @@ public class LibroService {
 
     private final LibroRepository repository;
 
-    public Libro create(Libro libro) {
+    public Libro crearLibro(Libro libro) {
         return repository.save(libro);
     }
 
-    public boolean exists(String titulo) {
+    public boolean existeLibroPorTitulo(String titulo) {
         return repository.existsByTitulo(titulo);
     }
 
-    public boolean exists(int id) {
+    public boolean existeLibroPorId(int id) {
         return repository.existsById(id);
     }
 
-    public Optional<Libro> search(int id){
+    public Optional<Libro> buscarLibroPorId(int id){
         return repository.findById(id);
     }
 
-    public void delete(int id){
+    public void eliminarLibroPorId(int id){
         repository.deleteById(id);
     }
 
@@ -52,4 +52,16 @@ public class LibroService {
         return repository.findBooksByUser_id(matricula); 
     }
 
+    public Page<Libro> buscarLibros(String titulo, String estado, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        if(titulo != null && estado != null && !estado.isEmpty()) return repository.findByTituloAndEstado(titulo, estado, pageable);
+        else if(titulo != null) return repository.findByTitulo(titulo, pageable);
+        else if(estado != null && !estado.isEmpty) return repository.findByEstado(estado, pageable);
+        else return repository.findAll(pageable);
+    }
+
+    public Page<Libro> buscarLibrosPorIdYEstado(Integer id, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findByIdAndEstado(id, pageable);
+    }
 }

@@ -60,5 +60,14 @@ public class EjemplarController {
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(ejemplares, ejemplarModelAssembler));
     }
 
+    @GetMapping(value = "/{id}", produces = { "application/json", "application/xml", "application/hal+json" })
+    public ResponseEntity<Ejemplar> getEjemplar(@PathVariable Integer id) {
+        Ejemplar ejemplar = service.buscarEjemplarPorId(id)
+                .orElseThrow(() -> new EjemplarNotFoundException(id));
+        ejemplar.add(linkTo(methodOn(EjemplarController.class).getEjemplar(id)).withSelfRel());
+        return ResponseEntity.ok(ejemplar);
+    }
+
+
 
 }
