@@ -44,5 +44,8 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     "AND p.matricula = ?1);", nativeQuery = true)
     List<Libro> findBooksByUser_id(@Param("matricula") Integer matricula);
 
+    boolean existsByIsbn(String isbn);
+
+    boolean existsByTitulo(String titulo);
 
 }
