@@ -21,7 +21,7 @@ public class Usuario extends RepresentationModel<Usuario>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int matricula;
     private String nombre;
-    private String fecha_naciemnto;
+    private String fechaNaciemnto;
     private String correo;
     private String penalizacion;
     

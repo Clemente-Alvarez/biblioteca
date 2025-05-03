@@ -18,7 +18,7 @@ public class Libro extends RepresentationModel<Libro> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int libro_id;
+    private int libroId;
     private String titulo;
     @NotNull(message = "El isbn es obligatorio y no puede ser null")
     private String isbn;

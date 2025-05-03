@@ -32,13 +32,27 @@ public class EjemplarService {
         return repository.findById(id);
     }
 
-    public List<Ejemplar> getByLibro_id(Integer libro_id){
-        return repository.findByLibro_id(libro_id); 
+    public Page<Ejemplar> getByLibroId(Integer libroId){
+        return repository.findByLibroId(libroId); 
     }
 
-    public List<Ejemplar> getByLibro_idAndEstado(Integer libro_id, String estado){
-        return repository.findByLibro_id(libro_id , estado); 
+    public Page<Ejemplar> getByEstado(String estado){
+        return repository.findByEstado(estado); 
     }
 
+    public Page<Ejemplar> getByTitulo(String titulo){
+        return repository.findByTitulo(titulo);
+    }
 
+    public Page<Ejemplar> getByTituloAndEstado(String titulo, String estado){
+        return repository.findByTituloAndEstado(titulo, estado);
+    }
+
+    public Page<Ejemplar> buscarEjemplares(String titulo, String estado, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        if(titulo != null && estado != null && !estado.isEmpty()) return repository.findByTituloAndEstado(titulo, estado, pageable);
+        else if(titulo != null) return repository.findByTitulo(titulo, pageable);
+        else if(estado != null && !estado.isEmpty) return repository.findByEstado(estado, pageable);
+        else return repository.findAll(pageable);
+    }
 }

@@ -18,8 +18,8 @@ public class Prestamo extends RepresentationModel<Prestamo>{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Prestamo_id;
-    private String fecha_inicio;
-    private String echa_devolucion;
+    private int prestamoId;
+    private String fechaInicio;
+    private String fechaDevolucion;
     private Boolean devuelto;
 }

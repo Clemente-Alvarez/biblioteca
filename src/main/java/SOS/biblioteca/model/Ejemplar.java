@@ -1,13 +1,13 @@
 package SOS.biblioteca.model;
 
-import java.beans.Transient;
-import java.lang.annotation.Inherited;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import org.springframework.hateoas.RepresentationModel;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.hateoas.RepresentationModel;
+import jakarta.validation.constraints.*;
 import lombok.*;
-
 
 @Entity
 @Table(name ="Ejemplares")
@@ -19,6 +19,6 @@ public class Ejemplar extends RepresentationModel<Ejemplar>{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ejemplar_id;
+    private int ejemplarId;
     private String estado; // disponible, prestado o baja
 }

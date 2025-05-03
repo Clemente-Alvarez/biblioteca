@@ -10,10 +10,20 @@ import SOS.biblioteca.model.Ejemplar;
 
 public interface EjemplarRepository extends JpaRepository<Ejemplar, Integer> {
     
+    //Usar @Query no es necesario y tampoco se porque necesitamos este metodo
     @Query(value = "SELECT * FROM ejemplar WHERE libro_id = ?1", nativeQuery = true)
-    List<Ejemplar> findByLibro_id(@Param("regex") Integer id);
+    Page<Ejemplar> findByLibroId(Integer id, Pageable pageable);
 
-    @Query(value = "SELECT * FROM ejemplar WHERE libro_id = ?1 AND estado = ?2", nativeQuery = true)
-    List<Ejemplar> findByLibro_id(@Param("regex") Integer id, @Param("estado") String estado);
+    //Usar @Query no es necesario
+    @Query(value = "SELECT * FROM ejemplar WHERE estado = ?1", nativeQuery = true)
+    Page<Ejemplar> findByEstado(String estado, Pageable pageable);
 
-}
+    @Query(value = "SELECT e.* FROM ejemplar e JOIN libro l " +
+                   "WHERE e.libro_id = l.id AND l.titulo LIKE '%' || ?1 ||'%'", nativeQuery = true)
+    List<Ejemplar> findByTitulo(String titulo, Pageable pageable);
+
+    @Query(value = "SELECT e.* FROM ejemplar e JOIN libro l " +
+                   "WHERE e.libro_id = l.id AND l.titulo LIKE '%' || ?1 ||'%'" +
+                   "AND e.estado = ?2", nativeQuery = true)
+    List<Ejemplar> findByTituloAndEstado(String titulo, String estado, Pageable pageable);
+}   
