@@ -2,10 +2,10 @@ package SOS.biblioteca.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*; 
+
 
 import SOS.biblioteca.exceptions.UsuarioExistsException;
 import SOS.biblioteca.model.Usuario;
@@ -34,7 +34,7 @@ public class UsuarioController {
     }
 
     @GetMapping(value = "", produces = { "application/json", "application/xml" })
-    public ResponseEntity<PagedModel<Empleado>> getUsuarios(
+    public ResponseEntity<PagedModel<Usuario>> getUsuarios(
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "2", required = false) int size) {
 
