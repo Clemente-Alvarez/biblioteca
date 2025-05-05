@@ -1,42 +1,40 @@
 package SOS.biblioteca.service;
-import java.time.LocalDate;
+
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import SOS.biblioteca.model.Prestamo;
 
+import SOS.biblioteca.model.Ejemplar;
+import SOS.biblioteca.model.Usuario;
+import SOS.biblioteca.model.Prestamo;
+import SOS.biblioteca.model.PrestamoId;
 import SOS.biblioteca.repository.PrestamoRepository;
 import lombok.AllArgsConstructor;
 
-@Service // Marcamos la clase compo componente de servicio
+@Service
 @AllArgsConstructor
 public class PrestamoService {
-     private final PrestamoRepository repository;
 
-    public Prestamo create(Prestamo prestamo) {
-        return repository.save(prestamo);
+    private final PrestamoRepository repository;
+
+    public List<Prestamo> buscarPorUsuarioId(int id) {
+        return repository.findByUsuarioId(id);
     }
 
-    public boolean exists(int id) {
-        return repository.existsById(id);
+    public void crearPrestamo(PrestamoId prestamoId, Usuario usuario, Ejemplar ejemplar) {
+        // Crear la clave primaria compuesta
+        prestamoId.setUsuarioId(usuario.getMatricula());
+
+        // Crear la relación
+        Prestamo prestamo = new Prestamo();
+        prestamo.setId(prestamoId);
+        prestamo.setUsuario(usuario);
+        prestamo.setEjemplar(ejemplar);
+
+        // Guardar en la base de datos
+        repository.save(prestamo);
     }
 
-    public Optional<Prestamo> search(int id) {
-        return repository.findById(id);
-    }
-
-    public List<Prestamo> getByUser_id(Integer user_id){
-        return repository.findByUser_id(user_id); 
-    }
-
-    // Devuelve una lista de prestamos filtrado por el estado y matricula del usuario. 
-    public List<Prestamo> getByUser_idAndStatus(Integer user_id, Integer devuelto){
-        return repository.findByUser_id(user_id , devuelto); 
-    }
-
-    // Devuelve una lista de prestamos activos dado un intervalo de fechas y una matricula
-    public List<Prestamo> getByInterval(Integer user_id, LocalDate startDate, LocalDate endDate){
-        return repository.findByIntervalAndUser_id(user_id, startDate, endDate); 
-    }
 }
+

@@ -58,10 +58,10 @@ public class LibroController {
 
     @GetMapping(value = "", produces = { "application/json", "application/xml" })
     public ResponseEntity<PagedModel<Libro>> getLibros(
-            @RequestParam(defaultValue = "", required = false) String titulo,
-            @RequestParam(defaultValue = "", required = false) String estado,
             @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "2", required = false) int size) {
+            @RequestParam(defaultValue = "2", required = false) int size,
+            @RequestParam(defaultValue = "", required = false) String titulo,
+            @RequestParam(defaultValue = "", required = false) String estado) {
         Page<Libro> libros = service.buscarLibros(titulo,estado,page,size);
          // fetch the page object by additionally passing paginable with the filters
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(libros, libroModelAssembler));

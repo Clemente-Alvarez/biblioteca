@@ -35,8 +35,8 @@ public class UsuarioService {
         return repository.existsByCorreo(correo);
     }
 
-    public Optional<Usuario> buscarUsuarioPorId(int id) {
-        return repository.findById(id);
+    public Optional<Usuario> buscarUsuarioPorMatricula(int id) {
+        return repository.findByMatricula(id);
     }
 
     public void eliminarUsuario(int id) {

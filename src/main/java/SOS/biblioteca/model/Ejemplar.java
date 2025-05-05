@@ -27,4 +27,6 @@ public class Ejemplar extends RepresentationModel<Ejemplar>{
 
     @Schema(description = "Estado del ejemplar", required = false, example = "prestado")
     private String estado; // disponible, prestado o baja
+
+
 }

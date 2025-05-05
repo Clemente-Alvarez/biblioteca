@@ -1,34 +1,26 @@
 package SOS.biblioteca.model;
 
-import java.beans.Transient;
-import java.lang.annotation.Inherited;
-
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.hateoas.RepresentationModel;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Entity
-@Table(name ="Prestamos")
-@Data 
+@Data
+@Table(name = "garaje_empleado")
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-public class Prestamo extends RepresentationModel<Prestamo>{
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Id del préstamo", required = true, example = "1")
-    private int prestamoId;
+public class Prestamo {
 
-    @Schema(description = "Fecha de inicio del préstamo", required = false, example = "12-01-2005")
-    private String fechaInicio;
+    @EmbeddedId // Indica GarajeEmpleadoId es la clave primaria de esta entidad
+    private PrestamoId id;
 
-    @Schema(description = "Fecha de devolución del préstamo", required = false, example = "26-01-2005")
-    private String fechaDevolucion;
+    @ManyToOne // Cada instancia GarajeEmpleado va a tener un empleado
+    @MapsId("ejemplarId") // Asocia la clave primaria al campo correspondiente
+    @JoinColumn(name = "ejemplar_id")
+    private Ejemplar ejemplar;
 
-    @Schema(description = "Autor del libro", required = false, example = "true")
-    private Boolean devuelto;
+    @ManyToOne // Cada instancia GarajeEmpleado va a tener un garaje
+    @MapsId("usuarioId") // Asocia la clave primaria al campo correspondiente
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
 }
