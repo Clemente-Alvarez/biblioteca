@@ -3,7 +3,12 @@ package SOS.biblioteca.service;
 import java.util.List;
 import java.util.Optional;
 
+<<<<<<< HEAD
 import org.springframework.boot.*;
+=======
+import org.hibernate.query.Page;
+import org.springdoc.core.converters.models.Pageable;
+>>>>>>> 2c1f64b9d7fc3fc201ea3ade0c7f597b4002dd2d
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 
