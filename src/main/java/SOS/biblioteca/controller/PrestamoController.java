@@ -44,8 +44,6 @@ public class PrestamoController {
                 prestamo.add(linkTo(methodOn(PrestamoController.class).getPrestamo(id)).withSelfRel());
         return ResponseEntity.ok(prestamo);
     }
-
-
     
 }
 

@@ -3,7 +3,10 @@ package SOS.biblioteca.repository;
 import java.util.Optional;
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
+import org.springdoc.core.converters.models.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -52,13 +55,15 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
                    
     boolean existsByTitulo(String titulo);
 
-    boolean existsByTituloP(String titulo, Pageable pageable);
-
+    
     Optional<Libro> findById(int id);
-
+    
     void deleteById(int id);
-
+    
     boolean existsById(int id);
-
+    
+    Libro save(Libro libro);
+    
+    List<Libro> findAll();
 
 }

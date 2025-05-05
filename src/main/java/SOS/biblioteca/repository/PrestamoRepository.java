@@ -2,6 +2,7 @@ package SOS.biblioteca.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,5 +27,10 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Integer> {
            "AND devuelto = false", nativeQuery = true)
     List<Prestamo> findByIntervalAndUser_id(@Param("matricula") Integer matricula, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
+    Prestamo save(Prestamo prestamo);
+
+    boolean existsById(int id);
+
+    Optional<Prestamo> findById(int id);
 
 }
