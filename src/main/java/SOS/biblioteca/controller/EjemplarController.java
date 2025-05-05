@@ -48,7 +48,7 @@ public class EjemplarController {
         throw new EjemplarExistsException(newEjemplar.getId());
     }
 
-    @GetMapping(value = "", produces = { "application/json" })
+    @GetMapping(value = "", produces = { "application/json"})
     public ResponseEntity<PagedModel<Ejemplar>> getEjemplares(
             @RequestParam(defaultValue = "", required = false) String titulo,
             @RequestParam(defaultValue = "", required = false) String estado,
@@ -56,19 +56,16 @@ public class EjemplarController {
             @RequestParam(defaultValue = "2", required = false) int size) {
         Page<Ejemplar> ejemplares = service.buscarEjemplares(titulo,estado,page,size);
         
-
         // fetch the page object by additionally passing paginable with the filters
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(ejemplares, ejemplarModelAssembler));
     }
 
-    @GetMapping(value = "/{id}", produces = { "application/json" })
+    @GetMapping(value = "/{id}", produces = { "application/json"})
     public ResponseEntity<Ejemplar> getEjemplar(@PathVariable Integer id) {
         Ejemplar ejemplar = service.buscarEjemplarPorId(id)
                 .orElseThrow(() -> new EjemplarNotFoundException(id));
         ejemplar.add(linkTo(methodOn(EjemplarController.class).getEjemplar(id)).withSelfRel());
         return ResponseEntity.ok(ejemplar);
     }
-
-
 
 }

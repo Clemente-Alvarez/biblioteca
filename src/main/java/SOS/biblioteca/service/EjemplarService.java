@@ -62,5 +62,4 @@ public class EjemplarService {
             return repository.findAll(pageable);
     }
 
-   
 }
