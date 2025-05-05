@@ -18,9 +18,9 @@ public class PrestamoService {
 
     private final PrestamoRepository repository;
 
-    public List<Prestamo> buscarPorUsuarioId(int id) {
-        return repository.findByUsuarioId(id);
-    }
+    // public List<Prestamo> buscarPorUsuarioId(int id) {
+    //     return repository.findByUsuarioMatricula(id);
+    // }
 
     public void crearPrestamo(PrestamoId prestamoId, Usuario usuario, Ejemplar ejemplar) {
         // Crear la clave primaria compuesta

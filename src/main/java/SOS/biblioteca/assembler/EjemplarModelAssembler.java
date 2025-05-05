@@ -11,7 +11,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-
+@Component
 public class EjemplarModelAssembler extends RepresentationModelAssemblerSupport<Ejemplar,Ejemplar> {
     public EjemplarModelAssembler() {
         super(EjemplarController.class, Ejemplar.class);
@@ -24,3 +24,4 @@ public class EjemplarModelAssembler extends RepresentationModelAssemblerSupport<
         return entity;
     }
 }
+    

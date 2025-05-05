@@ -184,21 +184,21 @@ public class UsuarioController {
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(ejemplares, ejemplarModelAssembler));
     }*/
     
-    @GetMapping(value = "/{id}/prestamos", produces = { "application/json", "application/xml" })
-    public ResponseEntity<PagedModel<Ejemplar>> getPrestamos(
-            @PathVariable Integer id,
-            @RequestParam(defaultValue = "0", required = false) int page,
-            @RequestParam(defaultValue = "2", required = false) int size,
-            @RequestParam(defaultValue = "false") boolean devuelto,
-            @RequestParam(defaultValue = "", required = false) String fecha) {
+    // @GetMapping(value = "/{id}/prestamos", produces = { "application/json", "application/xml" })
+    // public ResponseEntity<PagedModel<Ejemplar>> getPrestamos(
+    //         @PathVariable Integer id,
+    //         @RequestParam(defaultValue = "0", required = false) int page,
+    //         @RequestParam(defaultValue = "2", required = false) int size,
+    //         @RequestParam(defaultValue = "false") boolean devuelto,
+    //         @RequestParam(defaultValue = "", required = false) String fecha) {
 
-        Usuario usuario = service.buscarUsuarioPorMatricula(id)
-                .orElseThrow(() -> new UsuarioNotFoundException(id));
+    //     Usuario usuario = service.buscarUsuarioPorMatricula(id)
+    //             .orElseThrow(() -> new UsuarioNotFoundException(id));
 
-        List<Prestamo> prestamos = prestamoService.buscarPorUsuarioId(id);
+    //     List<Prestamo> prestamos = prestamoService.buscarPorUsuarioId(id);
         
-        return ResponseEntity.ok(pagedResourcesAssemblerEjemplar.toModel(ejemplares, ejemplarModelAssembler));
-    }
+    //     return ResponseEntity.ok(pagedResourcesAssemblerEjemplar.toModel(ejemplares, ejemplarModelAssembler));
+    // }
 
 
 }
