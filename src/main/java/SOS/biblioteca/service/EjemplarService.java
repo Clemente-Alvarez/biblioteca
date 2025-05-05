@@ -62,11 +62,5 @@ public class EjemplarService {
             return repository.findAll(pageable);
     }
 
-    public Page<Ejemplar> buscarPrestamos(Usuario usuario, String fechaUltimoPrestamo, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        if (fechaUltimoPrestamo != null && !fechaUltimoPrestamo.isEmpty())
-            return repository.findByUsuarioAndFechaUltimoPrestamo(usuario, fechaUltimoPrestamo, pageable);
-        else
-            return repository.findByUsuario(usuario, pageable);
-    }
+   
 }

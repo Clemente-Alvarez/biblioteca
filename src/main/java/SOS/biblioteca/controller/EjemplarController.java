@@ -48,7 +48,7 @@ public class EjemplarController {
         throw new EjemplarExistsException(newEjemplar.getId());
     }
 
-    @GetMapping(value = "", produces = { "application/json", "application/xml" })
+    @GetMapping(value = "", produces = { "application/json" })
     public ResponseEntity<PagedModel<Ejemplar>> getEjemplares(
             @RequestParam(defaultValue = "", required = false) String titulo,
             @RequestParam(defaultValue = "", required = false) String estado,
@@ -61,7 +61,7 @@ public class EjemplarController {
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(ejemplares, ejemplarModelAssembler));
     }
 
-    @GetMapping(value = "/{id}", produces = { "application/json", "application/xml", "application/hal+json" })
+    @GetMapping(value = "/{id}", produces = { "application/json" })
     public ResponseEntity<Ejemplar> getEjemplar(@PathVariable Integer id) {
         Ejemplar ejemplar = service.buscarEjemplarPorId(id)
                 .orElseThrow(() -> new EjemplarNotFoundException(id));
