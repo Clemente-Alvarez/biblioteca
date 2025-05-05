@@ -40,8 +40,8 @@ public class EjemplarController {
 
     @PostMapping()
     public ResponseEntity<Void> nuevoEjemplar(@Valid @RequestBody Ejemplar newEjemplar){
-        if(!service.exists(newEjemplar.getId())){
-            Ejemplar ejemplar = service.create(newEjemplar);
+        if(!service.existeEjemplarPorId(newEjemplar.getId())){
+            Ejemplar ejemplar = service.crearEjemplar(newEjemplar);
 
             return ResponseEntity.created(linkTo(EjemplarController.class).slash(ejemplar.getId()).toUri()).build();
         }

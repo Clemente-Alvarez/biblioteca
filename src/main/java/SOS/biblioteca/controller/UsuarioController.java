@@ -65,7 +65,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> replaceUsuario(@Valid @RequestBody Empleado newUsuario, @PathVariable Integer id) {
+    public ResponseEntity<Void> replaceUsuario(@Valid @RequestBody Usuario newUsuario, @PathVariable Integer id) {
         service.buscarUsuarioPorId(id)
                 .map(Usuario -> {
                     Usuario.setNombre(newUsuario.getNombre());
