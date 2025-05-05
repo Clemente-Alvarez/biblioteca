@@ -11,7 +11,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-
+@Component
 public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<Usuario,Usuario> {
     public UsuarioModelAssembler() {
         super(UsuarioController.class, Usuario.class);
