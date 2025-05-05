@@ -1,6 +1,7 @@
 package SOS.biblioteca.controller;
 import SOS.biblioteca.model.*;
 import SOS.biblioteca.service.*;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -48,6 +49,7 @@ public class UsuarioController {
     private final EjemplarService ejemplarService;
     private final PrestamoService prestamoService;
     private PagedResourcesAssembler<Usuario> pagedResourcesAssembler;
+    private PagedResourcesAssembler<Ejemplar> pagedResourcesAssemblerEjemplar;
     private UsuarioModelAssembler usuarioModelAssembler;
     private EjemplarModelAssembler ejemplarModelAssembler;
 
@@ -182,5 +184,21 @@ public class UsuarioController {
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(ejemplares, ejemplarModelAssembler));
     }*/
     
+    @GetMapping(value = "/{id}/prestamos", produces = { "application/json", "application/xml" })
+    public ResponseEntity<PagedModel<Ejemplar>> getPrestamos(
+            @PathVariable Integer id,
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "2", required = false) int size,
+            @RequestParam(defaultValue = "false") boolean devuelto,
+            @RequestParam(defaultValue = "", required = false) String fecha) {
+
+        Usuario usuario = service.buscarUsuarioPorMatricula(id)
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
+
+        List<Prestamo> prestamos = prestamoService.buscarPorUsuarioId(id);
+        
+        return ResponseEntity.ok(pagedResourcesAssemblerEjemplar.toModel(ejemplares, ejemplarModelAssembler));
+    }
+
 
 }
