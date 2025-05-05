@@ -19,13 +19,17 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
+import SOS.biblioteca.assembler.UsuarioModelAssembler;
 import SOS.biblioteca.exceptions.*;
+import SOS.biblioteca.model.Ejemplar;
+import SOS.biblioteca.model.Prestamo;
 import SOS.biblioteca.model.Usuario;
+import SOS.biblioteca.service.EjemplarService;
 import SOS.biblioteca.service.UsuarioService;
 import jakarta.validation.Valid;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -53,6 +57,8 @@ public class UsuarioController {
         Page<Usuario> usuarios = service.buscarUsuarios(page, size);
 
         // fetch the page object by additionally passing paginable with the filters
+        PagedResourcesAssembler<Usuario> pagedResourcesAssembler;
+        UsuarioModelAssembler usuarioModelAssembler;
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(usuarios, usuarioModelAssembler));
     }
 
@@ -88,7 +94,22 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    private final EjemplarService ejemplarService;
+
     @PostMapping(value = "/{id}/prestamos")
+    public ResponseEntity<Void> addEjemplaresToUsuario(@PathVariable Integer id,
+            @Valid @RequestBody Ejemplar ejemplarPrestado) {
+
+        Usuario usuario = service.buscarUsuarioPorId(id)
+                        .orElseThrow(() -> new UsuarioNotFoundException(id));
+        
+        Ejemplar ejemplar = ejemplarService.buscarEjemplarPorId(ejemplarPrestado.getId())
+                        .orElseThrow(() -> new EjemplarNotFoundException(ejemplarPrestado.getId()));
+
+        if(ejemplar.getEstado() != "disponible") throw new EjemplarNotAvailableException(ejemplarPrestado.getId());
+
+        return ResponseEntity.noContent().build();
+    }
     
 
 }
