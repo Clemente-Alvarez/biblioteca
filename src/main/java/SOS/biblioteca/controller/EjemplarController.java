@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 
 
 import SOS.biblioteca.exceptions.EjemplarExistsException;
+import SOS.biblioteca.exceptions.EjemplarNotFoundException;
 import SOS.biblioteca.model.Ejemplar;
 import SOS.biblioteca.service.EjemplarService;
 import jakarta.validation.Valid;
@@ -53,7 +54,7 @@ public class EjemplarController {
             @RequestParam(defaultValue = "", required = false) String estado,
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "2", required = false) int size) {
-        Page<Ejemplares> ejemplares = service.buscarEjemplares(titulo,estado,page,size);
+        Page<Ejemplar> ejemplares = service.buscarEjemplares(titulo,estado,page,size);
         
 
         // fetch the page object by additionally passing paginable with the filters

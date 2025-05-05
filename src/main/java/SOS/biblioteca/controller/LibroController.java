@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import SOS.biblioteca.model.Ejemplar;
 
 import SOS.biblioteca.exceptions.LibroExistsException;
+import SOS.biblioteca.exceptions.LibroNotExistsException;
+import SOS.biblioteca.exceptions.LibroNotFoundException;
 import SOS.biblioteca.model.Libro;
 import SOS.biblioteca.service.LibroService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
