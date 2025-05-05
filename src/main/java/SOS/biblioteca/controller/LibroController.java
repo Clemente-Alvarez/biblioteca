@@ -2,17 +2,20 @@ package SOS.biblioteca.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import SOS.biblioteca.model.Ejemplar;
-
+import SOS.biblioteca.assembler.LibroModelAssembler;
+import SOS.biblioteca.exceptions.DifferentIdException;
 import SOS.biblioteca.exceptions.LibroExistsException;
-import SOS.biblioteca.exceptions.LibroNotExistsException;
 import SOS.biblioteca.exceptions.LibroNotFoundException;
 import SOS.biblioteca.model.Libro;
+import SOS.biblioteca.service.EjemplarService;
 import SOS.biblioteca.service.LibroService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
@@ -56,7 +59,7 @@ public class LibroController {
 
                 Libro libro = service.buscarLibroPorId(id)
                                 .orElseThrow(() -> new LibroNotFoundException(id));
-                Set<EntityModel<Ejemplares>> listaEjemplares = new HashSet<>();
+                Set<EntityModel<Ejemplar>> listaEjemplares = new HashSet<>();
                 for (Ejemplar ejemplar : ejemplarService.buscarEjemplaresPorLibroId(id)) {
                         listaEjemplares.add(EntityModel.of(ejemplar,
                                         linkTo(methodOn(EjemplarController.class)
@@ -80,7 +83,7 @@ public class LibroController {
     @GetMapping(value = "/{libroId}/ejemplares/{ejemplarId}", produces = { "application/json", "application/xml", "application/hal+json" })
     public ResponseEntity<Ejemplar> getEjemplar(@PathVariable Integer libroId, @PathVariable Integer ejemplarId) {
         Libro libro = service.buscarLibroPorId(libroId)
-                .orElseThrow(() -> new LibroNotFoundException);
+                .orElseThrow(() -> new LibroNotFoundException(libroId));
         Ejemplar ejemplar = service.buscarEjemplarPorId(ejemplarId)
                 .orElseThrow(() -> new EjemplarNotFoundException(id));
         ejemplar.add(linkTo(methodOn(LibroController.class).getEjemplar(libroId,ejemplarId)).withSelfRel());

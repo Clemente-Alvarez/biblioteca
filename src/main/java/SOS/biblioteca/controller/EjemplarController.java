@@ -19,7 +19,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-
+import SOS.biblioteca.assembler.EjemplarModelAssembler;
 import SOS.biblioteca.exceptions.EjemplarExistsException;
 import SOS.biblioteca.exceptions.EjemplarNotFoundException;
 import SOS.biblioteca.model.Ejemplar;
@@ -40,12 +40,12 @@ public class EjemplarController {
 
     @PostMapping()
     public ResponseEntity<Void> nuevoEjemplar(@Valid @RequestBody Ejemplar newEjemplar){
-        if(!service.exists(newEjemplar.getEjemplarId())){
+        if(!service.exists(newEjemplar.getId())){
             Ejemplar ejemplar = service.create(newEjemplar);
 
-            return ResponseEntity.created(linkTo(EjemplarController.class).slash(ejemplar.getEjemplar_id()).toUri()).build();
+            return ResponseEntity.created(linkTo(EjemplarController.class).slash(ejemplar.getId()).toUri()).build();
         }
-        throw new EjemplarExistsException(newEjemplar.getEjemplar_id());
+        throw new EjemplarExistsException(newEjemplar.getId());
     }
 
     @GetMapping(value = "", produces = { "application/json", "application/xml" })
