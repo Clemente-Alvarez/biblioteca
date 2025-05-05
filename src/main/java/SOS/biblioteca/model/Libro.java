@@ -31,12 +31,14 @@ public class Libro extends RepresentationModel<Libro> {
     @NotNull(message = "El isbn es obligatorio y no puede ser null")
     private String isbn;
 
-    @Schema(description = "Titulo del libro", required = false, example = "Las aventuras de Don pepito")
+    @Schema(description = "Autor del libro", required = false, example = "Leonardo DiCaprio")
     private String autor;
 
+    @Schema(description = " Edición del libro", required = false, example = "Primera edición")
     private String edicion;
+
+    @Schema(description = "Editorial del libro", required = false, example = "Casablanca")
     private String editorial;
-    private String estado; 
 
     //@Transient
     //@JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null

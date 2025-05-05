@@ -11,8 +11,6 @@ import reactor.core.publisher.Mono;
 
 public class BibliotecaService {
 
-
-
     private WebClient webClient = WebClient.builder().baseUrl("http://localhost:8080/api/v1").build();
 
     // /usuarios

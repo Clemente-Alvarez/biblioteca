@@ -64,8 +64,8 @@ public class LibroService {
     public Page<Libro> buscarLibros(String titulo, String estado, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         if(titulo != null && estado != null && !estado.isEmpty()) return repository.findByTituloAndEstado(titulo, estado, pageable);
-        else if(titulo != null) return repository.findByTitulo(titulo, pageable);
-        else if(estado != null && !estado.isEmpty) return repository.findByEstado(estado, pageable);
+        else if(titulo != null) return repository.findByTituloContaining(titulo, pageable);
+        else if(estado != null && !estado.isEmpty()) return repository.findByEstado(estado, pageable);
         else return repository.findAll(pageable);
     }
 

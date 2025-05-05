@@ -3,10 +3,8 @@ package SOS.biblioteca.repository;
 import java.util.Optional;
 import java.util.List;
 
-import org.springdoc.core.converters.models.Pageable;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,23 +23,23 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     @Query(value = "SELECT * FROM libro WHERE titulo ~ :regex", nativeQuery = true)
     List<Libro> findByTituloRegex(@Param("regex") String regex);
     
-    List<Libro> findByTituloContaining(String titulo, Pageable pageable);
+    Page<Libro> findByTituloContaining(String titulo, Pageable pageable);
 
     @Query(value = "SELECT * FROM libro WHERE titulo ~ :regex AND estado = ?2", nativeQuery = true)
     List<Libro> findByTituloRegex(@Param("regex") String regex, @Param("estado") String estado);
 
     @Query(value = "SELECT DISTINCT l.* FROM libro l JOIN ejemplar e ON e.libro_id = l.id WHERE e.estado = ?1", nativeQuery = true)
-    List<Libro> findByEstado(String estado, Pageable pageable);
+    Page<Libro> findByEstado(String estado, Pageable pageable);
 
     @Query(value = "SELECT DISTINCT l.* FROM libro l JOIN ejemplar e " +
-    "ON e.libro_id = l.id WHERE e.estado = ?2" +
+    "ON e.libro_id = l.id WHERE e.estado = ?2 " +
     "AND l.titulo LIKE '%' || ?1 || '%'", nativeQuery = true)
-    List<Libro> findByTituloAndEstado(String titulo, String estado, Pageable pageable);
+    Page<Libro> findByTituloAndEstado(@Param("titulo") String titulo, @Param("estado") String estado, Pageable pageable);
     
     @Query(value = "SELECT DISTINCT l.* FROM libro l JOIN ejemplar e " +
     "ON e.libro_id = l.id WHERE e.estado = 'disponible'" +
                    "AND l.id = ?1", nativeQuery = true)
-                   List<Libro> findByIdAndEstado(Integer id, Pageable pageable);
+                   Page<Libro> findByIdAndEstado(Integer id, Pageable pageable);
                    
                    @Query(value = "SELECT * FROM libro l WHERE EXISTS " + 
                    "(SELECT 1 " +
@@ -61,6 +59,7 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     void deleteById(int id);
     
     boolean existsById(int id);
+    
     
   
 
