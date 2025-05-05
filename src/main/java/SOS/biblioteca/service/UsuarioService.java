@@ -43,7 +43,7 @@ public class UsuarioService {
         repository.deleteById(id);
     }
     
-    public List<Usuario> buscarUsuarios(int page, int size){
+    public Page<Usuario> buscarUsuarios(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         return repository.findAll(pageable); 
     }

@@ -60,10 +60,5 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
 
     boolean existsById(int id);
 
-    Libro save(Libro libro);
-
-    List<Libro> findAll();
-
-    List<Libro> findAll(Pageable pageable);
 
 }
