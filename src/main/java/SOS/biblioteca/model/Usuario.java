@@ -3,9 +3,13 @@ package SOS.biblioteca.model;
 import java.beans.Transient;
 import java.lang.annotation.Inherited;
 
+
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
+
 import org.springframework.hateoas.RepresentationModel;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 
@@ -19,10 +23,23 @@ public class Usuario extends RepresentationModel<Usuario>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int matricula;
+    @Schema(description = "Id del empleado", required = true, example = "1")
+    private Integer matricula;
+
+    @Schema(description = "Nombre del usuario", required = true, example = "Marcos")
+	@NotNull(message = "El nombre es obligatorio y no puede ser null")
     private String nombre;
+
+    @Schema(description = "Fecha de nacimiento", required = true, example = "13-12-2004")
+	@NotNull(message = "El nombre es obligatorio y no puede ser null")
     private String fechaNacimiento;
+
+    @Schema(description = "Correo del usuario", required = true, example = "marcos@menudocorreo.com")
+	@NotNull(message = "El nombre es obligatorio y no puede ser null")
     private String correo;
+
+    @Schema(description = "Fecha de bloqueo hasta poder prestar de nuevo del usuario", required = false, example = "19-09-1999")
+	@NotNull(message = "El nombre es obligatorio y no puede ser null")
     private String penalizacion;
     
 }

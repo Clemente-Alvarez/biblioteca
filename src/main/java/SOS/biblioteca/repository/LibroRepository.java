@@ -13,13 +13,10 @@ import org.springframework.data.repository.query.Param;
 import SOS.biblioteca.model.Libro;
 
 public interface LibroRepository extends JpaRepository<Libro, Integer> {
-<<<<<<< HEAD
-=======
     
     // Buscar si existe por nombre de usuario
     // El nombre del campo tiene que ser el mismo que el campo de la tabla
     Libro crearLibro(Libro libro);
->>>>>>> 2c1f64b9d7fc3fc201ea3ade0c7f597b4002dd2d
 
     
     @Query(value = "SELECT * FROM libro WHERE titulo ~ :regex", nativeQuery = true)

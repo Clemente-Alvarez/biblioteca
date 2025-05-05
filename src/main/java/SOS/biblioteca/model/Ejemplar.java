@@ -10,7 +10,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Entity
-@Table(name ="Ejemplares")
+@Table(name ="Ejemplar")
 @Data 
 @NoArgsConstructor
 @AllArgsConstructor
