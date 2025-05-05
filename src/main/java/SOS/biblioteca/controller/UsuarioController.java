@@ -88,7 +88,7 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping(value = "/{id}/prestamos")
+    //@PostMapping(value = "/{id}/prestamos"); 
     
 
 }

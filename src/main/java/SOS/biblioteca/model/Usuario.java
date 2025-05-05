@@ -31,15 +31,13 @@ public class Usuario extends RepresentationModel<Usuario>{
     private String nombre;
 
     @Schema(description = "Fecha de nacimiento", required = true, example = "13-12-2004")
-	@NotNull(message = "El nombre es obligatorio y no puede ser null")
+	@NotNull(message = "La fehca de nacimiento es obligatorio y no puede ser null")
     private String fechaNacimiento;
 
     @Schema(description = "Correo del usuario", required = true, example = "marcos@menudocorreo.com")
-	@NotNull(message = "El nombre es obligatorio y no puede ser null")
+	@NotNull(message = "El correo es obligatorio y no puede ser null")
     private String correo;
 
-    @Schema(description = "Fecha de bloqueo hasta poder prestar de nuevo del usuario", required = false, example = "19-09-1999")
-	@NotNull(message = "El nombre es obligatorio y no puede ser null")
     private String penalizacion;
     
 }

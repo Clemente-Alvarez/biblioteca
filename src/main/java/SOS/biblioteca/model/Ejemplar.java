@@ -19,7 +19,12 @@ public class Ejemplar extends RepresentationModel<Ejemplar>{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Id del ejemplar", required = false, example = "23")
     private int id;
+
+    @Schema(description = "Id del libro al que corresponde el ejemplar", required = true, example = "Vuelta al mundo en 80 días")
     private int libroId;
+
+    @Schema(description = "Estado del ejemplar", required = false, example = "prestado")
     private String estado; // disponible, prestado o baja
 }
