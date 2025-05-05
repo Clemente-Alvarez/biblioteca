@@ -3,6 +3,8 @@ package SOS.biblioteca.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.query.Page;
+import org.springdoc.core.converters.models.Pageable;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 
