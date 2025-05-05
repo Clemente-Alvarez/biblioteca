@@ -2,15 +2,15 @@ package SOS.biblioteca.model;
 
 import java.beans.Transient;
 import java.lang.annotation.Inherited;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.hateoas.RepresentationModel;
 import lombok.*;
+import lombok.AllArgsConstructor; 
 
 @Entity
 @Table(name ="Libros")
-@Data 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -19,8 +19,10 @@ public class Libro extends RepresentationModel<Libro> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @NotNull(message = "El titulo es obligatorio y no puede ser null")
     private String titulo;
+
     @NotNull(message = "El isbn es obligatorio y no puede ser null")
     private String isbn;
     private String autor;
