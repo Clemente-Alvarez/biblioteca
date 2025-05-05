@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import SOS.biblioteca.model.*;
 
+import org.hibernate.query.Page;
+import org.springdoc.core.converters.models.Pageable;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 
@@ -32,23 +34,23 @@ public class EjemplarService {
         return repository.findById(id);
     }
 
-    public Page<Ejemplar> buscarEjemplaresPorLibroId(Integer libroId) {
+    public Page buscarEjemplaresPorLibroId(Integer libroId) {
         return repository.findByLibroId(libroId);
     }
 
-    public Page<Ejemplar> getByEstado(String estado) {
+    public Page getByEstado(String estado) {
         return repository.findByEstado(estado);
     }
 
-    public Page<Ejemplar> getByTitulo(String titulo) {
+    public Page getByTitulo(String titulo) {
         return repository.findByTitulo(titulo);
     }
 
-    public Page<Ejemplar> getByTituloAndEstado(String titulo, String estado) {
+    public Page getByTituloAndEstado(String titulo, String estado) {
         return repository.findByTituloAndEstado(titulo, estado);
     }
 
-    public Page<Ejemplar> buscarEjemplares(String titulo, String estado, int page, int size) {
+    public Page buscarEjemplares(String titulo, String estado, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (titulo != null && estado != null && !estado.isEmpty())
             return repository.findByTituloAndEstado(titulo, estado, pageable);

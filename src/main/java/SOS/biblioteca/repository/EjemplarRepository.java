@@ -1,7 +1,9 @@
 package SOS.biblioteca.repository;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.hibernate.query.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,4 +28,18 @@ public interface EjemplarRepository extends JpaRepository<Ejemplar, Integer> {
                    "WHERE e.libro_id = l.id AND l.titulo LIKE '%' || ?1 ||'%'" +
                    "AND e.estado = ?2", nativeQuery = true)
     List<Ejemplar> findByTituloAndEstado(String titulo, String estado, Pageable pageable);
+
+    Ejemplar save(Ejemplar ejemplar);
+
+    void deleteById(int idEjemplar);
+
+    boolean existsById(int id);
+
+    Optional<Ejemplar> findById(int id);
+
+    Page findByLibroId(Integer libroId);
+
+    Page findByEstado(String estado);
+
+    Page findByTitulo(String titulo);
 }   
