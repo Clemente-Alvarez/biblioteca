@@ -1,8 +1,12 @@
 package SOS.biblioteca.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import SOS.biblioteca.model.Ejemplar;
@@ -18,11 +22,23 @@ public class PrestamoService {
 
     private final PrestamoRepository repository;
 
-    public List<Prestamo> buscarPorUsuarioId(int id) {
-        return repository.findByUsuarioId(id);
+    public Page<Ejemplar> buscarPrestamos(int id, boolean devuelto, String fecha, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        if(fecha != null && !fecha.isEmpty() && !devuelto) 
+            return repository.findByUsuarioIdAndDevueltoAndFecha(id, devuelto, fecha, pageable);
+        else return repository.findByUsuarioIdAndDevuelto(id, devuelto, pageable);
     }
 
-    public void crearPrestamo(PrestamoId prestamoId, Usuario usuario, Ejemplar ejemplar) {
+    public List<Ejemplar> buscarPrestamos(int id, boolean devuelto) {
+        return repository.findByUsuarioIdAndDevuelto(id, devuelto);
+    }
+
+    public Optional<Prestamo> buscarPrestamo(int usuarioId, int ejemplarId) {
+        return repository.findByUsuarioIdAndEjemplarId(usuarioId, ejemplarId);
+    }
+
+    public Prestamo crearPrestamo(PrestamoId prestamoId, Usuario usuario, Ejemplar ejemplar,
+                                  String fechaPrestamo, String fechaDevolucion, boolean devuelto) {
         // Crear la clave primaria compuesta
         prestamoId.setUsuarioId(usuario.getMatricula());
 
@@ -31,9 +47,11 @@ public class PrestamoService {
         prestamo.setId(prestamoId);
         prestamo.setUsuario(usuario);
         prestamo.setEjemplar(ejemplar);
+        if(fechaPrestamo.isEmpty()) prestamo.setFechaPrestamo(fechaPrestamo);
+        if(fechaDevolucion.isEmpty()) prestamo.setFechaDevolucion(fechaDevolucion);
+        prestamo.setDevuelto(devuelto);
 
-        // Guardar en la base de datos
-        repository.save(prestamo);
+        return repository.save(prestamo);
     }
 
 }

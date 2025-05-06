@@ -26,6 +26,11 @@ public interface EjemplarRepository extends JpaRepository<Ejemplar, Integer> {
                    "AND e.estado = ?2", nativeQuery = true)
     Page<Ejemplar> findByTituloAndEstado(String titulo, String estado, Pageable pageable);
 
+    @Query(value = "SELECT 1 FROM ejemplar " +
+                   "WHERE libro_id = ?1 " +
+                   "AND estado = ?2", nativeQuery = true)
+    Optional<Ejemplar> findByLibroIdAndEstado(Integer id, String estado);
+
     void deleteById(int idEjemplar);
 
     void deleteByLibroId(int idLibro);

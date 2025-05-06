@@ -22,5 +22,7 @@ public class Prestamo {
     @MapsId("usuarioId") // Asocia la clave primaria al campo correspondiente
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
-
+    private String fechaPrestamo;
+    private String fechaDevolucion;
+    private boolean devuelto;
 }

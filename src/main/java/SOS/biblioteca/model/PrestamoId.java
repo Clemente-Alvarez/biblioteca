@@ -16,5 +16,5 @@ public class PrestamoId {
     private int usuarioId;
     private String fechaPrestamo;
     private String fechaDevolucion;
-    private boolean devuelto;
+    private String fechaPedidoAmpliacion;
 }

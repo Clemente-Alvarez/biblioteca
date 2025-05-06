@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import SOS.biblioteca.model.Ejemplar;
 import SOS.biblioteca.assembler.LibroModelAssembler;
-import SOS.biblioteca.exceptions.DifferentIdException;
-import SOS.biblioteca.exceptions.EjemplarNotFoundException;
-import SOS.biblioteca.exceptions.LibroExistsException;
-import SOS.biblioteca.exceptions.LibroNotFoundException;
+import SOS.biblioteca.exceptions.*;
 import SOS.biblioteca.model.Libro;
 import SOS.biblioteca.service.EjemplarService;
 import SOS.biblioteca.service.LibroService;
@@ -125,10 +122,12 @@ public class LibroController {
     public ResponseEntity<Void> deleteLibro(@PathVariable Integer id,
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "2", required = false) int size){
-        if (service.existeLibroPorId(id) && !service.buscarLibrosPorIdYEstado(id,page,size).isEmpty()) {
+        if(!service.existeLibroPorId(id)) throw new LibroNotFoundException(id);
+        if (ejemplarService.buscarEjemplarPorLibroIdYEstado(id, "no disponible").isPresent()) 
+            throw new EjemplarPrestadoException(id);
+        else{
             service.eliminarLibroPorId(id);
-        } else {
-            throw new LibroNotFoundException(id);
+            ejemplarService.eliminarEjemplarPorLibroId(id);
         }
         return ResponseEntity.noContent().build();
     }

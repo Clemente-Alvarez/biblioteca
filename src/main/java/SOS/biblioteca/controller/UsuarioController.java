@@ -1,7 +1,11 @@
 package SOS.biblioteca.controller;
 import SOS.biblioteca.model.*;
 import SOS.biblioteca.service.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
@@ -22,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +34,6 @@ import org.springframework.http.ResponseEntity;
 import SOS.biblioteca.assembler.UsuarioModelAssembler;
 import SOS.biblioteca.assembler.EjemplarModelAssembler;
 import SOS.biblioteca.exceptions.*;
-import SOS.biblioteca.model.Ejemplar;
-import SOS.biblioteca.model.Prestamo;
-import SOS.biblioteca.model.Usuario;
-import SOS.biblioteca.service.EjemplarService;
-import SOS.biblioteca.service.UsuarioService;
 import jakarta.validation.Valid;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.AllArgsConstructor;
@@ -164,7 +164,8 @@ public class UsuarioController {
                 nuevoPrestamo.setFechaDevolucion(resultado);
                 ejemplar.setEstado("no disponible");
                 ejemplarService.crearEjemplar(ejemplar);
-                prestamoService.crearPrestamo(nuevoPrestamo, usuario, ejemplar);
+                prestamoService.crearPrestamo(nuevoPrestamo, usuario, ejemplar,
+                        fechaPrestamo, resultado, false);
 
                 return ResponseEntity.noContent().build();
         }
@@ -184,7 +185,7 @@ public class UsuarioController {
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(ejemplares, ejemplarModelAssembler));
     }*/
     
-    @GetMapping(value = "/{id}/prestamos", produces = { "application/json", "application/xml" })
+    @GetMapping(value = "/{id}/prestamos", produces = { "application/json" })
     public ResponseEntity<PagedModel<Ejemplar>> getPrestamos(
             @PathVariable Integer id,
             @RequestParam(defaultValue = "0", required = false) int page,
@@ -195,10 +196,71 @@ public class UsuarioController {
         Usuario usuario = service.buscarUsuarioPorMatricula(id)
                 .orElseThrow(() -> new UsuarioNotFoundException(id));
 
-        List<Prestamo> prestamos = prestamoService.buscarPorUsuarioId(id);
+        Page<Ejemplar> ejemplares = prestamoService.buscarPrestamos(id,devuelto,fecha,page,size);
         
         return ResponseEntity.ok(pagedResourcesAssemblerEjemplar.toModel(ejemplares, ejemplarModelAssembler));
     }
 
+    @PutMapping("/{usuarioId}/prestamos/{prestamoId}")
+    public ResponseEntity<Void> returnPrestamo(@Valid @RequestBody PrestamoId prestamoId, 
+            @PathVariable Integer id,
+            @RequestParam(defaultValue = "false", required = false) boolean ampliar) {
+        Usuario usuario = service.buscarUsuarioPorMatricula(id)
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
+        Ejemplar ejemplar = ejemplarService.buscarEjemplarPorId(prestamoId.getEjemplarId())
+                .orElseThrow(() -> new EjemplarNotFoundException(id));
+        Prestamo prestamo = prestamoService.buscarPrestamo(id, prestamoId.getEjemplarId())
+                .orElseThrow(() -> new PrestamoNotFoundException(id));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String fechaDevolucionPrestamo = prestamo.getFechaDevolucion();
+        LocalDate dateDevolucionPrestamo = LocalDate.parse(fechaDevolucionPrestamo, formatter);
+        if(ampliar){
+            String fechaPedidoAmpliacion = prestamoId.getFechaPedidoAmpliacion();
+            LocalDate datePedidoAmpliacion = LocalDate.parse(fechaPedidoAmpliacion, formatter);
+            if(dateDevolucionPrestamo.isBefore(datePedidoAmpliacion)) throw new PrestamoTimeLimitExceededException(id);
+            LocalDate dateNuevaDevolucion = dateDevolucionPrestamo.plusWeeks(2);
+            String fechaNuevaDevolucion = dateNuevaDevolucion.format(formatter);
+            prestamoService.crearPrestamo(prestamoId, usuario, 
+                ejemplar,"",fechaNuevaDevolucion,false);
+        }else{
+            String fechaDevolucionUsuario = prestamoId.getFechaDevolucion();
+            LocalDate dateDevolucionUsuario = LocalDate.parse(fechaDevolucionUsuario, formatter);
+            if(dateDevolucionPrestamo.isBefore(dateDevolucionUsuario)) throw new PrestamoTimeLimitExceededException(id);
+            ejemplar.setEstado("disponible");
+            ejemplarService.crearEjemplar(ejemplar);
+            prestamoService.crearPrestamo(prestamoId, usuario, 
+                ejemplar,"","",true);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/{id}/actividad", produces = { "application/json" })
+    public ResponseEntity<Usuario> getActividad(
+            @PathVariable Integer id,
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "2", required = false) int size) {
+
+        Usuario usuario = service.buscarUsuarioPorMatricula(id)
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
+
+        Set<EntityModel<Ejemplar>> listaPrestamosActuales = new HashSet<>();
+                for (Ejemplar ejemplar : prestamoService.buscarPrestamos(id,false)) {
+                        listaPrestamosActuales.add(EntityModel.of(ejemplar,
+                                        linkTo(methodOn(EjemplarController.class)
+                                                        .getEjemplar(ejemplar.getId()))
+                                                        .withSelfRel()));
+                }
+        Set<EntityModel<Ejemplar>> listaPrestamosDevueltos = new HashSet<>();
+                for (Ejemplar ejemplar : prestamoService.buscarPrestamos(id,true)) {
+                        listaPrestamosDevueltos.add(EntityModel.of(ejemplar,
+                                        linkTo(methodOn(EjemplarController.class)
+                                                        .getEjemplar(ejemplar.getId()))
+                                                        .withSelfRel()));
+                }
+                usuario.setListaPrestamosActuales(listaPrestamosActuales);
+                usuario.setListaPrestamosDevueltos(listaPrestamosDevueltos);
+                usuario.add(linkTo(methodOn(UsuarioController.class).getUsuario(id)).withSelfRel());
+                return ResponseEntity.ok(usuario);
+    }
 
 }

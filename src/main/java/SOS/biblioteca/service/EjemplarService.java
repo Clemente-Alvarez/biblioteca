@@ -39,6 +39,10 @@ public class EjemplarService {
         return repository.findById(id);
     }
 
+    public Optional<Ejemplar> buscarEjemplarPorLibroIdYEstado(int id, String estado) {
+        return repository.findByLibroIdAndEstado(id, estado);
+    }
+
     public Page<Ejemplar> buscarEjemplaresPorLibroId(Integer libroId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return repository.findByLibroId(libroId,pageable);

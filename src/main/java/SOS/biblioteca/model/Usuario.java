@@ -1,13 +1,16 @@
 package SOS.biblioteca.model;
 
-import java.beans.Transient;
+import SOS.biblioteca.model.*;
 import java.lang.annotation.Inherited;
-
+import java.util.Set;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -39,5 +42,13 @@ public class Usuario extends RepresentationModel<Usuario>{
     private String correo;
 
     private String penalizacion;
+
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null
+    private Set<EntityModel<Ejemplar>> listaPrestamosActuales;
+
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null
+    private Set<EntityModel<Ejemplar>> listaPrestamosDevueltos;
     
 }
