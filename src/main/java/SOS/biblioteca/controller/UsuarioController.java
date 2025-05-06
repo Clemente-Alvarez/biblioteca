@@ -55,7 +55,7 @@ public class UsuarioController {
 
     @PostMapping()
     public ResponseEntity<Void> nuevoUsuario(@Valid @RequestBody Usuario newUsuario){
-        if(!service.existeUsuarioPorCorreo(newUsuario.getCorreo()) && !service.existeUsuarioPorId(newUsuario.getMatricula())){
+        if(!service.existeUsuarioPorCorreo(newUsuario.getCorreo())){
             Usuario usuario = service.crearUsuario(newUsuario);
 
             return ResponseEntity.created(linkTo(UsuarioController.class).slash(usuario.getMatricula()).toUri()).build();
