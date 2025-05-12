@@ -1,5 +1,6 @@
 package SOS.biblioteca.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,6 @@ public class PrestamoId {
     private int ejemplarId;
     private int usuarioId;
     private String fechaPrestamo;
-    private String fechaDevolucion;
+    @Column(insertable=false,updatable=false)private String fechaDevolucion;
     private String fechaPedidoAmpliacion;
 }

@@ -5,7 +5,7 @@ import lombok.*;
 
 @Entity
 @Data
-@Table(name = "garaje_empleado")
+@Table(name = "prestamos")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Prestamo {
@@ -23,6 +23,6 @@ public class Prestamo {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
     private String fechaPrestamo;
-    private String fechaDevolucion;
+    @Column(insertable=false,updatable=false)private String fechaDevolucion;
     private boolean devuelto;
 }
