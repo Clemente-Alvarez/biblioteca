@@ -23,6 +23,6 @@ public class Prestamo {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
     private String fechaPrestamo;
-    @Column(insertable=false,updatable=false)private String fechaDevolucion;
+    private String fechaDevolucion;
     private boolean devuelto;
 }

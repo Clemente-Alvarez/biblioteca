@@ -15,7 +15,10 @@ public class PrestamoId {
     @NotNull(message = "El empleadoId es obligatorio y no puede ser null")
     private int ejemplarId;
     private int usuarioId;
+    @Column(insertable=false,updatable=false)
     private String fechaPrestamo;
-    @Column(insertable=false,updatable=false)private String fechaDevolucion;
+    @Column(insertable=false,updatable=false)
+    private String fechaDevolucion;
+    @Column(insertable=false,updatable=false)
     private String fechaPedidoAmpliacion;
 }
