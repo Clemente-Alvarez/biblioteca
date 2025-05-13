@@ -60,7 +60,7 @@ public class UsuarioController {
 
             return ResponseEntity.created(linkTo(UsuarioController.class).slash(usuario.getMatricula()).toUri()).build();
         }
-        throw new UsuarioExistsException(newUsuario.getMatricula());
+        throw new UsuarioExistsException(newUsuario.getCorreo());
     }
 
     @GetMapping(value = "", produces = { "application/json", "application/xml" })
