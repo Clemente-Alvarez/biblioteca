@@ -15,9 +15,9 @@ import SOS.biblioteca.model.Ejemplar;
 public interface EjemplarRepository extends JpaRepository<Ejemplar, Integer> {
     
     //Usar @Query no es necesario y tampoco se porque necesitamos este metodo
-
-
-    @Query(value = "SELECT e.* FROM ejemplar e JOIN libro l " +
+        // Se añadió en la versiones iniciales del proyecto con el pretexto de predecir su utilidad en etapas posteriores. 
+    
+        @Query(value = "SELECT e.* FROM ejemplar e JOIN libro l " +
                    "ON e.libro_id = l.id AND l.titulo LIKE '%' || ?1 ||'%'", nativeQuery = true)
     Page<Ejemplar> findByTitulo(String titulo, Pageable pageable);
 
