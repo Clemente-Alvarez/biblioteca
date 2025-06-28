@@ -2,7 +2,7 @@ package SOS.biblioteca.exceptions;
 
 public class LibroExistsException extends RuntimeException {
 
-    public LibroExistsException (int id){
-        super("Libro con Id " + id + "ya existe.");
+    public LibroExistsException (int isbn){
+        super("Libro con Id " + isbn + "ya existe.");
     }
 }

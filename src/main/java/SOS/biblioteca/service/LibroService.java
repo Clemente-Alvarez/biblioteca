@@ -40,6 +40,10 @@ public class LibroService {
         return repository.findById(id);
     }
 
+    public Optional<Libro> buscarLibroPorIsbn(int isbn){
+        return repository.findByIsbn(isbn);
+    }
+
     public void eliminarLibroPorId(int id){
         repository.deleteById(id);
     }
@@ -48,29 +52,26 @@ public class LibroService {
         return repository.findAll();
     }
 
-    public List<Libro> getByTitulo(String titulo){
-        return repository.findByTituloRegex(titulo); 
-    }
-
-    public List<Libro> getByTituloAndEstado(String titulo, String estado){
-        return repository.findByTituloRegex(titulo , estado); 
-    }
-
     // Devuelve los libros prestados previamente por un usuario. 
     public List<Libro> getLibrosPrestadosByUser_id(Integer matricula){
         return repository.findBooksByUser_id(matricula); 
     }
 
-    public Page<Libro> buscarLibros(String titulo, String estado, int page, int size){
+    public Page<Libro> buscarLibrosPorDisponibles(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        if(titulo != null && estado != null && !estado.isEmpty()) return repository.findByTituloAndEstado(titulo, estado, pageable);
-        else if(titulo != null) return repository.findByTituloContaining(titulo, pageable);
-        else if(estado != null && !estado.isEmpty()) return repository.findByEstado(estado, pageable);
-        else return repository.findAll(pageable);
+        return repository.findByDisponibles(pageable);
     }
 
-    public Page<Libro> buscarLibrosPorIdYEstado(Integer id, int page, int size){
+    public Page<Libro> buscarLibroPorIdYNoPrestado(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return repository.findByIdAndEstado(id, pageable);
+        return repository.findByIdAndNoPrestado(pageable);
+    }
+
+    public Page<Libro> buscarLibros(String titulo, boolean disponible, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        if(titulo != null && disponible) return repository.findByTituloAndDisponibles(titulo, pageable);
+        else if(titulo != null) return repository.findByTituloContaining(titulo, pageable);
+        else if(disponible) return repository.findByDisponibles(pageable);
+        else return repository.findAll(pageable);
     }
 }

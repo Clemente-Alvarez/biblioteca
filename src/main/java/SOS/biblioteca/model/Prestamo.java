@@ -10,15 +10,15 @@ import lombok.*;
 @AllArgsConstructor
 public class Prestamo {
 
-    @EmbeddedId // Indica GarajeEmpleadoId es la clave primaria de esta entidad
+    @EmbeddedId // Indica PrestamoId es la clave primaria de esta entidad
     private PrestamoId id;
 
-    @ManyToOne // Cada instancia GarajeEmpleado va a tener un empleado
-    @MapsId("ejemplarId") // Asocia la clave primaria al campo correspondiente
-    @JoinColumn(name = "ejemplar_id")
-    private Ejemplar ejemplar;
+    @ManyToOne // Cada instancia Prestamo va a tener un libro
+    @MapsId("libroId") // Asocia la clave primaria al campo correspondiente
+    @JoinColumn(name = "libro_id")
+    private Libro libro;
 
-    @ManyToOne // Cada instancia GarajeEmpleado va a tener un garaje
+    @ManyToOne // Cada instancia Prestamo va a tener un usuario
     @MapsId("usuarioId") // Asocia la clave primaria al campo correspondiente
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;

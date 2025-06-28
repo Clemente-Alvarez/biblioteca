@@ -17,40 +17,35 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     
  
     
-    @Query(value = "SELECT * FROM libro WHERE titulo ~ :regex", nativeQuery = true)
-    List<Libro> findByTituloRegex(@Param("regex") String regex);
+    //@Query(value = "SELECT * FROM libro WHERE titulo ~ :regex", nativeQuery = true)
+    //List<Libro> findByTituloRegex(@Param("regex") String regex);
     
     Page<Libro> findByTituloContaining(String titulo, Pageable pageable);
 
-    @Query(value = "SELECT * FROM libro WHERE titulo ~ :regex AND estado = ?2", nativeQuery = true)
-    List<Libro> findByTituloRegex(@Param("regex") String regex, @Param("estado") String estado);
+    //@Query(value = "SELECT * FROM libro WHERE titulo ~ :regex AND estado = ?2", nativeQuery = true)
+    //List<Libro> findByTituloRegex(@Param("regex") String regex, @Param("estado") String estado);
 
-    @Query(value = "SELECT DISTINCT l.* FROM libro l JOIN ejemplar e ON e.libro_id = l.id WHERE e.estado = ?1", nativeQuery = true)
-    Page<Libro> findByEstado(String estado, Pageable pageable);
+    @Query(value = "SELECT DISTINCT l.* FROM libro l  WHERE l.disponibles > 0", nativeQuery = true)
+    Page<Libro> findByDisponibles(Pageable pageable);
 
-    @Query(value = "SELECT DISTINCT l.* FROM libro l JOIN ejemplar e " +
-    "ON e.libro_id = l.id WHERE e.estado = ?2 " +
-    "AND l.titulo LIKE '%' || ?1 || '%'", nativeQuery = true)
-    Page<Libro> findByTituloAndEstado(@Param("titulo") String titulo, @Param("estado") String estado, Pageable pageable);
-    
-    @Query(value = "SELECT DISTINCT l.* FROM libro l JOIN ejemplar e " +
-    "ON e.libro_id = l.id WHERE e.estado = 'disponible'" +
-                   "AND l.id = ?1", nativeQuery = true)
-                   Page<Libro> findByIdAndEstado(Integer id, Pageable pageable);
+    @Query(value = "SELECT DISTINCT l.* FROM libro l  WHERE l.disponibles > 0 AND l.titulo LIKE '%' || ?1 || '%'", nativeQuery = true)
+    Page<Libro> findByTituloAndDisponibles(String titulo, Pageable pageable);
                    
-                   @Query(value = "SELECT * FROM libro l WHERE EXISTS " + 
-                   "(SELECT 1 " +
-                   "FROM ejemplar e " + 
-                   "JOIN prestamo p ON e.ejemplar_id = p.ejemplar_id " + 
-                   "WHERE e.libro_id = l.libro_id " +
-                   "AND p.matricula = ?1);", nativeQuery = true)
-                   List<Libro> findBooksByUser_id(@Param("matricula") Integer matricula);
+    @Query(value = "SELECT * FROM libro l WHERE EXISTS " + 
+    "(SELECT 1 " +
+    "FROM ejemplar e " + 
+    "JOIN prestamo p ON e.ejemplar_id = p.ejemplar_id " + 
+    "WHERE e.libro_id = l.libro_id " +
+    "AND p.matricula = ?1);", nativeQuery = true)
+    List<Libro> findBooksByUser_id(@Param("matricula") Integer matricula);
                    
     boolean existsByIsbn(String isbn);
                    
     boolean existsByTitulo(String titulo);
     
     Optional<Libro> findById(int id);
+
+    Optional<Libro> findByIsbn(int id);
     
     void deleteById(int id);
     

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PrestamoId {
     @NotNull(message = "El empleadoId es obligatorio y no puede ser null")
-    private int ejemplarId;
+    private int libroId;
     private int usuarioId;
     @Column(insertable=false,updatable=false)
     private String fechaPrestamo;
