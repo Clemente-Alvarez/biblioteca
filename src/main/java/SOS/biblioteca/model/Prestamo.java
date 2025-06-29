@@ -1,5 +1,9 @@
 package SOS.biblioteca.model;
 
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,19 +14,21 @@ import lombok.*;
 @AllArgsConstructor
 public class Prestamo {
 
-    @EmbeddedId // Indica PrestamoId es la clave primaria de esta entidad
-    private PrestamoId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @ManyToOne // Cada instancia Prestamo va a tener un libro
-    @MapsId("libroId") // Asocia la clave primaria al campo correspondiente
     @JoinColumn(name = "libro_id")
     private Libro libro;
 
     @ManyToOne // Cada instancia Prestamo va a tener un usuario
-    @MapsId("usuarioId") // Asocia la clave primaria al campo correspondiente
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
-    private String fechaPrestamo;
-    private String fechaDevolucion;
-    private boolean devuelto;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy")
+    private LocalDate fechaPrestamo;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy")
+    private LocalDate fechaDevolucion;
+    private Boolean devuelto;
 }

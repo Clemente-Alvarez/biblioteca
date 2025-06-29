@@ -1,5 +1,6 @@
 package SOS.biblioteca.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,8 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import SOS.biblioteca.model.Ejemplar;
 import SOS.biblioteca.model.Usuario;
+import SOS.biblioteca.model.Libro;
 import SOS.biblioteca.model.Prestamo;
 import SOS.biblioteca.model.PrestamoId;
 import SOS.biblioteca.repository.PrestamoRepository;
@@ -22,33 +23,32 @@ public class PrestamoService {
 
     private final PrestamoRepository repository;
 
-    public Page<Ejemplar> buscarPrestamos(int id, boolean devuelto, String fecha, int page, int size) {
+    public Page<Libro> buscarPrestamosPorFecha(Integer id, Boolean devuelto, LocalDate fecha, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        if(fecha != null && !fecha.isEmpty() && !devuelto) 
-            return repository.findByUsuarioIdAndDevueltoAndFecha(id, devuelto, fecha, pageable);
-        else return repository.findByUsuarioIdAndDevuelto(id, devuelto, pageable);
+        return repository.findByUsuarioIdAndDevueltoAndFecha(id, devuelto, fecha, pageable);
     }
 
-    public List<Ejemplar> buscarPrestamos(int id, boolean devuelto) {
+    public Page<Libro> buscarPrestamos(Integer id, Boolean devuelto, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findByUsuarioIdAndDevuelto(id, devuelto, pageable);
+    }
+
+    public List<Libro> buscarPrestamos(int id, boolean devuelto) {
         return repository.findByUsuarioIdAndDevuelto(id, devuelto);
     }
 
-    public Optional<Prestamo> buscarPrestamo(int usuarioId, int ejemplarId) {
-        return repository.findByUsuarioIdAndEjemplarId(usuarioId, ejemplarId);
+    public Optional<Prestamo> buscarPrestamo(Integer usuarioId, Integer libroId, LocalDate fecha) {
+        return repository.findByUsuarioIdAndLibroIdAndFechaPrestamo(usuarioId, libroId, fecha);
     }
 
-    public Prestamo crearPrestamo(PrestamoId prestamoId, Usuario usuario, Ejemplar ejemplar,
-                                  String fechaPrestamo, String fechaDevolucion, boolean devuelto) {
-        // Crear la clave primaria compuesta
-        prestamoId.setUsuarioId(usuario.getMatricula());
+    public Prestamo crearPrestamo(Usuario usuario, Libro libro,
+                                  LocalDate fechaPrestamo, LocalDate fechaDevolucion, boolean devuelto) {
 
-        // Crear la relación
         Prestamo prestamo = new Prestamo();
-        prestamo.setId(prestamoId);
         prestamo.setUsuario(usuario);
-        prestamo.setEjemplar(ejemplar);
-        if(fechaPrestamo.isEmpty()) prestamo.setFechaPrestamo(fechaPrestamo);
-        if(fechaDevolucion.isEmpty()) prestamo.setFechaDevolucion(fechaDevolucion);
+        prestamo.setLibro(libro);
+        prestamo.setFechaPrestamo(fechaPrestamo);
+        prestamo.setFechaDevolucion(fechaDevolucion);
         prestamo.setDevuelto(devuelto);
 
         return repository.save(prestamo);

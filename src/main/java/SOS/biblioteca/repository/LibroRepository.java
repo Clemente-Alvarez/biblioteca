@@ -45,7 +45,7 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     
     Optional<Libro> findById(int id);
 
-    Optional<Libro> findByIsbn(int id);
+    Optional<Libro> findByIsbn(String isbn);
     
     void deleteById(int id);
     

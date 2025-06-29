@@ -2,9 +2,6 @@ package SOS.biblioteca.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
-import java.util.Set;
-import java.util.HashSet;
-
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.EntityModel;
@@ -22,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import SOS.biblioteca.model.Ejemplar;
 import SOS.biblioteca.assembler.LibroModelAssembler;
 import SOS.biblioteca.exceptions.*;
 import SOS.biblioteca.model.Libro;

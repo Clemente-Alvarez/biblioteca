@@ -2,6 +2,8 @@ package SOS.biblioteca.model;
 
 import SOS.biblioteca.model.*;
 import java.lang.annotation.Inherited;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -10,6 +12,7 @@ import jakarta.validation.constraints.*;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,7 +29,6 @@ public class Usuario extends RepresentationModel<Usuario>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Id del empleado", required = true, example = "1")
     private Integer matricula;
 
     @Schema(description = "Nombre del usuario", required = true, example = "Marcos")
@@ -34,21 +36,21 @@ public class Usuario extends RepresentationModel<Usuario>{
     private String nombre;
 
     @Schema(description = "Fecha de nacimiento", required = true, example = "13-12-2004")
-	@NotNull(message = "La fehca de nacimiento es obligatorio y no puede ser null")
-    private String fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     @Schema(description = "Correo del usuario", required = true, example = "marcos@menudocorreo.com")
 	@NotNull(message = "El correo es obligatorio y no puede ser null")
     private String correo;
 
-    private String penalizacion;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy")
+    private LocalDate penalizacion;
 
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null
-    private Set<EntityModel<Ejemplar>> listaPrestamosActuales;
+    private List<Libro> listaPrestamosActuales;
 
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null
-    private Set<EntityModel<Ejemplar>> listaPrestamosDevueltos;
+    private List<Libro> listaPrestamosDevueltos;
     
 }

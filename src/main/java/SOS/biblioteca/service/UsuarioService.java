@@ -23,7 +23,7 @@ public class UsuarioService {
         return repository.save(usuario);
     }
 
-    public boolean existeUsuarioPorId(int id) {
+    public boolean existeUsuarioPorMatricula(Integer id) {
         return repository.existsById(id);
     }
 
@@ -35,11 +35,11 @@ public class UsuarioService {
         return repository.existsByCorreo(correo);
     }
 
-    public Optional<Usuario> buscarUsuarioPorMatricula(int id) {
-        return repository.findByMatricula(id);
+    public Optional<Usuario> buscarUsuarioPorMatricula(Integer id) {
+        return repository.findById(id);
     }
 
-    public void eliminarUsuario(int id) {
+    public void eliminarUsuarioPorMatricula(Integer id) {
         repository.deleteById(id);
     }
     

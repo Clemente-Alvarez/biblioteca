@@ -28,7 +28,7 @@ public class LibroService {
         return repository.existsByTitulo(titulo);
     }
 
-    public boolean existeLibroPorId(int id) {
+    public boolean existeLibroPorId(Integer id) {
         return repository.existsById(id);
     }
 
@@ -36,15 +36,15 @@ public class LibroService {
         return repository.existsByIsbn(isbn);
     }
 
-    public Optional<Libro> buscarLibroPorId(int id){
+    public Optional<Libro> buscarLibroPorId(Integer id){
         return repository.findById(id);
     }
 
-    public Optional<Libro> buscarLibroPorIsbn(int isbn){
+    public Optional<Libro> buscarLibroPorIsbn(String isbn){
         return repository.findByIsbn(isbn);
     }
 
-    public void eliminarLibroPorId(int id){
+    public void eliminarLibroPorId(Integer id){
         repository.deleteById(id);
     }
 
@@ -62,12 +62,7 @@ public class LibroService {
         return repository.findByDisponibles(pageable);
     }
 
-    public Page<Libro> buscarLibroPorIdYNoPrestado(int page, int size){
-        Pageable pageable = PageRequest.of(page, size);
-        return repository.findByIdAndNoPrestado(pageable);
-    }
-
-    public Page<Libro> buscarLibros(String titulo, boolean disponible, int page, int size){
+    public Page<Libro> buscarLibros(String titulo, Boolean disponible, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         if(titulo != null && disponible) return repository.findByTituloAndDisponibles(titulo, pageable);
         else if(titulo != null) return repository.findByTituloContaining(titulo, pageable);
