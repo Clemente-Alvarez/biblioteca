@@ -151,9 +151,17 @@ public class UsuarioController {
         if(fecha!=null) prestamos=prestamoService.buscarPrestamosPorFecha(matricula, devuelto, fecha, page, size);
         else prestamos=prestamoService.buscarPrestamos(matricula, devuelto, page, size);
 
+        Set<Integer> usuarios = new HashSet<>();
+        Set<Integer> libros = new HashSet<>();
         for (Prestamo p: prestamos) {
-            p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
-            p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+            if (!usuarios.contains(p.getUsuario().getMatricula())) {
+                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
+                usuarios.add(p.getUsuario().getMatricula());
+            }
+            if (!libros.contains(p.getLibro().getId())) {
+                p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+                libros.add(p.getLibro().getId());
+            }
         }
         
         return ResponseEntity.ok(pagedResourcesAssemblerPrestamo.toModel(prestamos, prestamoModelAssembler));
@@ -209,11 +217,27 @@ public class UsuarioController {
         List<Prestamo> prestamosActuales = prestamoService.buscarPrestamosActuales(matricula);
         List<Prestamo> prestamosHistorial = prestamoService.buscarPrestamosDevueltos(matricula);
 
+        Set<Integer> usuarios = new HashSet<>();
+        Set<Integer> libros = new HashSet<>();
         for (Prestamo p: prestamosActuales) {
-            p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+            if (!libros.contains(p.getLibro().getId())) {
+                p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+                libros.add(p.getLibro().getId());
+            }
+            if (!usuarios.contains(p.getUsuario().getMatricula())) {
+                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
+                usuarios.add(p.getUsuario().getMatricula());
+            }
         }
         for (Prestamo p: prestamosHistorial) {
-            p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+            if (!libros.contains(p.getLibro().getId())) {
+                p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+                libros.add(p.getLibro().getId());
+            }
+            if (!usuarios.contains(p.getUsuario().getMatricula())) {
+                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
+                usuarios.add(p.getUsuario().getMatricula());
+            }
         }
 
         UsuarioActivity usuarioActivity = new UsuarioActivity();
