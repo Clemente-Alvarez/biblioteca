@@ -15,17 +15,17 @@ import SOS.biblioteca.model.PrestamoId;
 
 public interface PrestamoRepository extends JpaRepository<Prestamo, Integer> {
 
-    @Query(value = "SELECT l.* FROM libro l JOIN prestamo p " +
-                   "ON l.libro_id = p.libro_id WHERE p.matricula = ?1 AND p.devuelto = ?2", nativeQuery = true)
-    Page<Libro> findByUsuarioIdAndDevuelto(Integer usuarioId, Boolean devuelto, Pageable pageable);
+    @Query(value = "SELECT * FROM prestamo " +
+                   "WHERE matricula = ?1 AND devuelto = ?2", nativeQuery = true)
+    Page<Prestamo> findByUsuarioIdAndDevuelto(Integer usuarioId, Boolean devuelto, Pageable pageable);
 
     @Query(value = "SELECT e.* FROM ejemplar e JOIN prestamo p " +
                    "ON e.ejemplar_id = p.ejemplar_id WHERE p.matricula = ?1 AND p.devuelto = ?2", nativeQuery = true)
     List<Libro> findByUsuarioIdAndDevuelto(Integer usuarioId, Boolean devuelto);
 
-    @Query(value = "SELECT l.* FROM libro l JOIN prestamo p " +
-                   "ON l.libro_id = p.libro_id WHERE p.matricula = ?1 AND p.devuelto = ?2 AND p.fecha_prestamo = ?3", nativeQuery = true)
-    Page<Libro> findByUsuarioIdAndDevueltoAndFecha(Integer usuarioId, Boolean devuelto, LocalDate fecha, Pageable pageable);
+    @Query(value = "SELECT * FROM prestamo " +
+                   "WHERE matricula = ?1 AND devuelto = ?2 AND fecha_prestamo = ?3", nativeQuery = true)
+    Page<Prestamo> findByUsuarioIdAndDevueltoAndFecha(Integer usuarioId, Boolean devuelto, LocalDate fecha, Pageable pageable);
 
     @Query(value = "SELECT * FROM prestamo p " +
                    "WHERE p.matricula = ?1 AND p.libro_id = ?2 AND p.fecha_prestamo = ?3", nativeQuery = true)

@@ -31,5 +31,5 @@ public class PrestamoId  {
     private LocalDate fechaDevolucion;
     @Column(insertable=false,updatable=false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy")
-    private LocalDate fechaAmpliacion;
+    private LocalDate fechaPedidoAmpliacion;
 }
