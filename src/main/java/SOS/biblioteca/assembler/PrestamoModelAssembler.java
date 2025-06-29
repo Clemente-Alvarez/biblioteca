@@ -19,7 +19,7 @@ public class PrestamoModelAssembler extends RepresentationModelAssemblerSupport<
     @Override
     public Prestamo toModel(Prestamo entity) {
 
-        entity.add(linkTo(methodOn(UsuarioController.class).getPrestamo(entity.getId())).withSelfRel());
+        entity.add(linkTo(methodOn(UsuarioController.class).getPrestamo(entity.getUsuario().getMatricula(),entity.getId())).withSelfRel());
         return entity;
     }
 }
