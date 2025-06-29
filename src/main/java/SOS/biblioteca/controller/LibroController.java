@@ -39,8 +39,9 @@ public class LibroController {
 
     @PostMapping()
     public ResponseEntity<Void> nuevoLibro(@Valid @RequestBody Libro newLibro){
+        if(newLibro.getId()!=null) throw new LibroIdNotNullException();
         if(service.existeLibroPorIsbn(newLibro.getIsbn())) throw new LibroExistsException(newLibro.getIsbn());
-        
+        if(newLibro.getEjemplares()!=newLibro.getDisponibles()) throw new EjemplaresDisponiblesMismatchException();
         newLibro.setDisponibles(newLibro.getEjemplares());
         Libro libro = service.crearLibro(newLibro);
         return ResponseEntity.created(linkTo(LibroController.class).slash(libro.getId()).toUri()).build();
@@ -71,7 +72,7 @@ public class LibroController {
             @PathVariable Integer id){
         Libro libro = service.buscarLibroPorId(id)
             .orElseThrow(() -> new LibroNotFoundException(id));
-        if(libro.getEjemplares() - newLibro.getEjemplares() > libro.getDisponibles()) throw new LibroIllegalArgumentsException();
+        if(libro.getEjemplares() - newLibro.getEjemplares() > libro.getDisponibles()) throw new DisponiblesInsuficientesException();
 
         newLibro.setId(id);
         newLibro.setDisponibles(libro.getDisponibles() - libro.getEjemplares() + newLibro.getEjemplares());
