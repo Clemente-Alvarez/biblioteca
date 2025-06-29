@@ -23,12 +23,12 @@ public class PrestamoService {
 
     private final PrestamoRepository repository;
 
-    public Page<Libro> buscarPrestamosPorFecha(Integer id, Boolean devuelto, LocalDate fecha, int page, int size) {
+    public Page<Prestamo> buscarPrestamosPorFecha(Integer id, Boolean devuelto, LocalDate fecha, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return repository.findByUsuarioIdAndDevueltoAndFecha(id, devuelto, fecha, pageable);
     }
 
-    public Page<Libro> buscarPrestamos(Integer id, Boolean devuelto, int page, int size) {
+    public Page<Prestamo> buscarPrestamos(Integer id, Boolean devuelto, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return repository.findByUsuarioIdAndDevuelto(id, devuelto, pageable);
     }
@@ -37,8 +37,8 @@ public class PrestamoService {
         return repository.findByUsuarioIdAndDevuelto(id, devuelto);
     }
 
-    public Optional<Prestamo> buscarPrestamo(Integer usuarioId, Integer libroId, LocalDate fecha) {
-        return repository.findByUsuarioIdAndLibroIdAndFechaPrestamo(usuarioId, libroId, fecha);
+    public Optional<Prestamo> buscarPrestamo(Integer prestamoId) {
+        return repository.findById(prestamoId);
     }
 
     public Prestamo crearPrestamo(Usuario usuario, Libro libro,

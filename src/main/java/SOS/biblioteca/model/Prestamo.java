@@ -2,6 +2,8 @@ package SOS.biblioteca.model;
 
 import java.time.LocalDate;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.*;
@@ -12,7 +14,7 @@ import lombok.*;
 @Table(name = "prestamos")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Prestamo {
+public class Prestamo extends RepresentationModel<Prestamo>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
