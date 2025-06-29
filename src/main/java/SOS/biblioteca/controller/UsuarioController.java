@@ -198,7 +198,7 @@ public class UsuarioController {
     }
  
     @GetMapping(value = "/{matricula}/actividad", produces = { "application/json" })
-    public ResponseEntity<Usuario> getActividad(
+    public ResponseEntity<UsuarioActivity> getActividad(
             @PathVariable Integer matricula,
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "2", required = false) int size) {
@@ -225,7 +225,7 @@ public class UsuarioController {
         usuarioActivity.setListaPrestamosActuales(prestamosActuales);
         usuarioActivity.setListaPrestamosDevueltos(prestamosHistorial);
         usuarioActivity.add(linkTo(methodOn(UsuarioController.class).getUsuario(matricula)).withSelfRel());
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.ok(usuarioActivity);
     }
                 
 
