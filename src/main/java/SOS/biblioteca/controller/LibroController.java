@@ -40,14 +40,13 @@ public class LibroController {
     @PostMapping()
     public ResponseEntity<Void> nuevoLibro(@Valid @RequestBody Libro newLibro){
         if(service.existeLibroPorIsbn(newLibro.getIsbn())) throw new LibroExistsException(newLibro.getIsbn());
-        if(newLibro.getEjemplares() < 0) throw new LibroIllegalArgumentsException();
         
         newLibro.setDisponibles(newLibro.getEjemplares());
         Libro libro = service.crearLibro(newLibro);
         return ResponseEntity.created(linkTo(LibroController.class).slash(libro.getId()).toUri()).build();
     }
 
-    @GetMapping(value = "", produces = { "application/json", "application/xml" })
+    @GetMapping(value = "", produces = { "application/json" })
     public ResponseEntity<PagedModel<Libro>> getLibros(
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "8", required = false) int size,
@@ -58,7 +57,7 @@ public class LibroController {
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(libros, libroModelAssembler));
     }
 
-    @GetMapping(value = "/{id}", produces = { "application/json", "application/xml" })
+    @GetMapping(value = "/{id}", produces = { "application/json" })
     public ResponseEntity<Libro> getLibro(@PathVariable Integer id) {
 
         Libro libro = service.buscarLibroPorId(id)
@@ -72,7 +71,6 @@ public class LibroController {
             @PathVariable Integer id){
         Libro libro = service.buscarLibroPorId(id)
             .orElseThrow(() -> new LibroNotFoundException(id));
-        if(newLibro.getEjemplares() < 0) throw new LibroIllegalArgumentsException();
         if(libro.getEjemplares() - newLibro.getEjemplares() > libro.getDisponibles()) throw new LibroIllegalArgumentsException();
 
         newLibro.setId(id);

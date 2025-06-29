@@ -19,9 +19,13 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Integer> {
                    "WHERE matricula = ?1 AND devuelto = ?2", nativeQuery = true)
     Page<Prestamo> findByUsuarioIdAndDevuelto(Integer usuarioId, Boolean devuelto, Pageable pageable);
 
-    @Query(value = "SELECT e.* FROM ejemplar e JOIN prestamo p " +
-                   "ON e.ejemplar_id = p.ejemplar_id WHERE p.matricula = ?1 AND p.devuelto = ?2", nativeQuery = true)
-    List<Libro> findByUsuarioIdAndDevuelto(Integer usuarioId, Boolean devuelto);
+    @Query(value = "SELECT * FROM prestamo " +
+                   "WHERE matricula = ?1 AND devuelto = false ORDER BY fecha_prestamo DESC", nativeQuery = true)
+    List<Prestamo> findByUsuarioId(Integer usuarioId);
+
+    @Query(value = "SELECT * FROM prestamo " +
+                   "WHERE matricula = ?1 AND devuelto = true ORDER BY fecha_devolucion DESC LIMIT 5", nativeQuery = true)
+    List<Prestamo> findByUsuarioIdCount(Integer usuarioId);
 
     @Query(value = "SELECT * FROM prestamo " +
                    "WHERE matricula = ?1 AND devuelto = ?2 AND fecha_prestamo = ?3", nativeQuery = true)

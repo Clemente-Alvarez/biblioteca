@@ -25,7 +25,7 @@ public class UsuarioExceptionAdvice {
     return new ErrorMessage(ex.getMessage());
   }
 
-  /*@ExceptionHandler(MethodArgumentNotValidException.class)
+  @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorMessage handleValidationExceptions1(
       MethodArgumentNotValidException ex) {
@@ -36,6 +36,6 @@ public class UsuarioExceptionAdvice {
       errors.put(fieldName, errorMessage);
     });
     return new ErrorMessage(errors.toString());
-  }*/
+  }
 
 }

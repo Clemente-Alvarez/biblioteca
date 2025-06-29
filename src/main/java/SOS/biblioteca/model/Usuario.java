@@ -36,21 +36,22 @@ public class Usuario extends RepresentationModel<Usuario>{
     private String nombre;
 
     @Schema(description = "Fecha de nacimiento", required = true, example = "13-12-2004")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate fechaNacimiento;
 
     @Schema(description = "Correo del usuario", required = true, example = "marcos@menudocorreo.com")
 	@NotNull(message = "El correo es obligatorio y no puede ser null")
     private String correo;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate penalizacion;
 
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null
-    private List<Libro> listaPrestamosActuales;
+    private List<Prestamo> listaPrestamosActuales;
 
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null
-    private List<Libro> listaPrestamosDevueltos;
+    private List<Prestamo> listaPrestamosDevueltos;
     
 }

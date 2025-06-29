@@ -24,11 +24,11 @@ public class Libro extends RepresentationModel<Libro> {
     private Integer id;
 
     @Schema(description = "Titulo del libro", required = true, example = "Las aventuras de Don pepito")
-    @NotNull(message = "El titulo es obligatorio y no puede ser null ni estar vacío")
+    @NotBlank(message = "El titulo es obligatorio y no puede ser null ni estar vacío")
     private String titulo;
 
     @Schema(description = "isbn", required = true, example = "Las aventuras de Don pepito")
-    @NotNull(message = "El isbn es obligatorio y no puede ser null ni estar vacío")
+    @NotBlank(message = "El isbn es obligatorio y no puede ser null ni estar vacío")
     private String isbn;
 
     @Schema(description = "Autor del libro", required = false, example = "Leonardo DiCaprio")
@@ -42,6 +42,7 @@ public class Libro extends RepresentationModel<Libro> {
 
     @Schema(description = "cantidad de ejemplares", required = true, example = "3")
     @NotNull(message = "La cantidad de ejemplares es obligatorio y no puede ser null")
+    @Min(value = 0, message = "El número de ejemplares no puede ser negativo")
     private Integer ejemplares;
 
     @Schema(description = "ejemplares disponibles", required = false, example = "2")

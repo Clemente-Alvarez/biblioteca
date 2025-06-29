@@ -190,36 +190,31 @@ public class UsuarioController {
         }
         return ResponseEntity.noContent().build();
     }
-
-    /* 
-    @GetMapping(value = "/{id}/actividad", produces = { "application/json" })
+ 
+    @GetMapping(value = "/{matricula}/actividad", produces = { "application/json" })
     public ResponseEntity<Usuario> getActividad(
-            @PathVariable Integer id,
+            @PathVariable Integer matricula,
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "2", required = false) int size) {
 
-        Usuario usuario = service.buscarUsuarioPorMatricula(id)
-                .orElseThrow(() -> new UsuarioNotFoundException(id));
+        Usuario usuario = service.buscarUsuarioPorMatricula(matricula)
+                .orElseThrow(() -> new UsuarioNotFoundException(matricula));
 
-        Set<EntityModel<Ejemplar>> listaPrestamosActuales = new HashSet<>();
-                for (Ejemplar ejemplar : prestamoService.buscarPrestamos(id,false)) {
-                        listaPrestamosActuales.add(EntityModel.of(ejemplar,
-                                        linkTo(methodOn(EjemplarController.class)
-                                                        .getEjemplar(ejemplar.getId()))
-                                                        .withSelfRel()));
-                }
-        Set<EntityModel<Ejemplar>> listaPrestamosDevueltos = new HashSet<>();
-                for (Ejemplar ejemplar : prestamoService.buscarPrestamos(id,true)) {
-                        listaPrestamosDevueltos.add(EntityModel.of(ejemplar,
-                                        linkTo(methodOn(EjemplarController.class)
-                                                        .getEjemplar(ejemplar.getId()))
-                                                        .withSelfRel()));
-                }
-                usuario.setListaPrestamosActuales(listaPrestamosActuales);
-                usuario.setListaPrestamosDevueltos(listaPrestamosDevueltos);
-                usuario.add(linkTo(methodOn(UsuarioController.class).getUsuario(id)).withSelfRel());
-                return ResponseEntity.ok(usuario);
+        List<Prestamo> prestamosActuales = prestamoService.buscarPrestamosActuales(matricula);
+        List<Prestamo> prestamosHistorial = prestamoService.buscarPrestamosDevueltos(matricula);
+
+        for (Prestamo p: prestamosActuales) {
+            p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+        }
+        for (Prestamo p: prestamosHistorial) {
+            p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+        }
+
+        usuario.setListaPrestamosActuales(prestamosActuales);
+        usuario.setListaPrestamosDevueltos(prestamosHistorial);
+        usuario.add(linkTo(methodOn(UsuarioController.class).getUsuario(matricula)).withSelfRel());
+        return ResponseEntity.ok(usuario);
     }
-                */
+                
 
 }

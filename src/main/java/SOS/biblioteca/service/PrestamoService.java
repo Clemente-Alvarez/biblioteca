@@ -33,8 +33,12 @@ public class PrestamoService {
         return repository.findByUsuarioIdAndDevuelto(id, devuelto, pageable);
     }
 
-    public List<Libro> buscarPrestamos(int id, boolean devuelto) {
-        return repository.findByUsuarioIdAndDevuelto(id, devuelto);
+    public List<Prestamo> buscarPrestamosActuales(Integer id) {
+        return repository.findByUsuarioId(id);
+    }
+
+    public List<Prestamo> buscarPrestamosDevueltos(Integer id) {
+        return repository.findByUsuarioIdCount(id);
     }
 
     public Optional<Prestamo> buscarPrestamo(Integer prestamoId) {
