@@ -68,8 +68,7 @@ public class LibroController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Void> replaceLibro(@Valid @RequestBody Libro newLibro, 
-            @PathVariable Integer id){
+    public ResponseEntity<Void> replaceLibro(@Valid @RequestBody Libro newLibro, @PathVariable Integer id){
         Libro libro = service.buscarLibroPorId(id)
             .orElseThrow(() -> new LibroNotFoundException(id));
         if(libro.getEjemplares() - newLibro.getEjemplares() > libro.getDisponibles()) throw new DisponiblesInsuficientesException();
@@ -77,7 +76,7 @@ public class LibroController {
         newLibro.setId(id);
         newLibro.setDisponibles(libro.getDisponibles() - libro.getEjemplares() + newLibro.getEjemplares());
         service.crearLibro(newLibro);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); 
     }
 
     @DeleteMapping(value = "/{id}")
