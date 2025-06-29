@@ -25,10 +25,10 @@ public interface LibroRepository extends JpaRepository<Libro, Integer> {
     //@Query(value = "SELECT * FROM libro WHERE titulo ~ :regex AND estado = ?2", nativeQuery = true)
     //List<Libro> findByTituloRegex(@Param("regex") String regex, @Param("estado") String estado);
 
-    @Query(value = "SELECT DISTINCT l.* FROM libro l  WHERE l.disponibles > 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM libro WHERE disponibles > 0", nativeQuery = true)
     Page<Libro> findByDisponibles(Pageable pageable);
 
-    @Query(value = "SELECT DISTINCT l.* FROM libro l  WHERE l.disponibles > 0 AND l.titulo LIKE '%' || ?1 || '%'", nativeQuery = true)
+    @Query(value = "SELECT * FROM libro WHERE disponibles > 0 AND titulo LIKE '%' || ?1 || '%'", nativeQuery = true)
     Page<Libro> findByTituloAndDisponibles(String titulo, Pageable pageable);
                    
     @Query(value = "SELECT * FROM libro l WHERE EXISTS " + 
