@@ -1,18 +1,21 @@
-# Use postgres/example user/password credentials
+version: '3.9'
 
 services:
   db:
     image: postgres
     restart: always
-    # set shared memory limit when using docker compose
-    shm_size: 128mb    
+    shm_size: 128mb
     volumes:
-      - pgdata:/var/lib/postgresql/data 
-    ports:
-       - "5432:5432"
+      - ./initdb:/docker-entrypoint-initdb.d
     environment:
-      POSTGRES_USER: postgres          # Username
-      POSTGRES_PASSWORD: mysecretpassword
-   
-volumes:
-  pgdata:
+      POSTGRES_USER: papaya
+      POSTGRES_PASSWORD: lectora
+      POSTGRES_DB: la_santa_biblioteca
+    ports: 
+      - 5432:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
