@@ -129,11 +129,11 @@ public class UsuarioController {
                 
                 LocalDate fechaDevolucionReal = nuevoPrestamo.getFechaFin();
                 LocalDate fechaDevolucion = fecha.plusWeeks(2);
-                prestamoService.crearPrestamo(usuario, libro,
+                Prestamo prestamo = prestamoService.crearPrestamo(usuario, libro,
                         fecha, fechaDevolucion, false);
                 libro.setDisponibles(libro.getDisponibles()-1);
                 libroService.crearLibro(libro);
-                return ResponseEntity.noContent().build();
+                return ResponseEntity.created(linkTo(methodOn(UsuarioController.class).getPrestamo(matricula,prestamo.getId())).toUri()).build();
         }
     
     @GetMapping(value = "/{matricula}/prestamos", produces = { "application/json" })
@@ -141,7 +141,7 @@ public class UsuarioController {
             @PathVariable Integer matricula,
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "8", required = false) int size,
-            @RequestParam(defaultValue = "false") Boolean devuelto,
+            @RequestParam(defaultValue = "false", required = false) Boolean devuelto,
             @RequestParam(required = false) @DateTimeFormat(pattern="dd-mm-yyyy") LocalDate fecha) {
 
         Usuario usuario = service.buscarUsuarioPorMatricula(matricula)
@@ -156,11 +156,12 @@ public class UsuarioController {
 
     @GetMapping(value = "/{matricula}/prestamos/{id}", produces = { "application/json" })
     public ResponseEntity<Prestamo> getPrestamo(
+            @PathVariable Integer matricula,
             @PathVariable Integer id) {
 
         Prestamo prestamo = prestamoService.buscarPrestamo(id)
                 .orElseThrow(() -> new PrestamoNotFoundException(id));
-        prestamo.add(linkTo(methodOn(UsuarioController.class).getPrestamo(id)).withSelfRel());
+        prestamo.add(linkTo(methodOn(UsuarioController.class).getPrestamo(matricula,id)).withSelfRel());
         return ResponseEntity.ok(prestamo);
     }
 
