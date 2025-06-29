@@ -28,9 +28,9 @@ public class Prestamo extends RepresentationModel<Prestamo>{
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate fechaPrestamo;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-mm-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate fechaDevolucion;
     private Boolean devuelto;
 }
