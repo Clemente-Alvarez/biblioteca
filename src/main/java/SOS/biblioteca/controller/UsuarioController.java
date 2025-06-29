@@ -125,7 +125,7 @@ public class UsuarioController {
                 LocalDate fecha = nuevoPrestamo.getFechaInicio();
 
                 LocalDate fechaPenalizacion = usuario.getPenalizacion();
-                if(fecha.isBefore(fechaPenalizacion)) throw new UserWithPenaltyException(matricula);
+                if(fecha != null && fecha.isBefore(fechaPenalizacion)) throw new UserWithPenaltyException(matricula);
                 
                 LocalDate fechaDevolucionReal = nuevoPrestamo.getFechaFin();
                 LocalDate fechaDevolucion = fecha.plusWeeks(2);
