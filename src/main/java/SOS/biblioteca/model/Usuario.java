@@ -48,10 +48,10 @@ public class Usuario extends RepresentationModel<Usuario>{
 
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null
-    private List<Libro> listaPrestamosActuales;
+    private List<Prestamo> listaPrestamosActuales;
 
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL) // Solo mostrar si no es null
-    private List<Libro> listaPrestamosDevueltos;
+    private List<Prestamo> listaPrestamosDevueltos;
     
 }
