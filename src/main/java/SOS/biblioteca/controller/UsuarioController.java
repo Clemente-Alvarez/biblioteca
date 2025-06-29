@@ -150,6 +150,11 @@ public class UsuarioController {
         Page<Prestamo> prestamos; 
         if(fecha!=null) prestamos=prestamoService.buscarPrestamosPorFecha(matricula, devuelto, fecha, page, size);
         else prestamos=prestamoService.buscarPrestamos(matricula, devuelto, page, size);
+
+        for (Prestamo p: prestamos) {
+            p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
+            p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+        }
         
         return ResponseEntity.ok(pagedResourcesAssemblerPrestamo.toModel(prestamos, prestamoModelAssembler));
     }
@@ -211,9 +216,15 @@ public class UsuarioController {
             p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
         }
 
-        usuario.setListaPrestamosActuales(prestamosActuales);
-        usuario.setListaPrestamosDevueltos(prestamosHistorial);
-        usuario.add(linkTo(methodOn(UsuarioController.class).getUsuario(matricula)).withSelfRel());
+        UsuarioActivity usuarioActivity = new UsuarioActivity();
+        usuarioActivity.setMatricula(matricula);
+        usuarioActivity.setNombre(usuario.getNombre());
+        usuarioActivity.setCorreo(usuario.getCorreo());
+        usuarioActivity.setFechaNacimiento(usuario.getFechaNacimiento());
+        usuarioActivity.setPenalizacion(usuario.getPenalizacion());
+        usuarioActivity.setListaPrestamosActuales(prestamosActuales);
+        usuarioActivity.setListaPrestamosDevueltos(prestamosHistorial);
+        usuarioActivity.add(linkTo(methodOn(UsuarioController.class).getUsuario(matricula)).withSelfRel());
         return ResponseEntity.ok(usuario);
     }
                 
