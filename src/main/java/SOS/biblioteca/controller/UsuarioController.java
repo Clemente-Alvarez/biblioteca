@@ -150,6 +150,19 @@ public class UsuarioController {
         Page<Prestamo> prestamos; 
         if(fecha!=null) prestamos=prestamoService.buscarPrestamosPorFecha(matricula, devuelto, fecha, page, size);
         else prestamos=prestamoService.buscarPrestamos(matricula, devuelto, page, size);
+
+        Set<Integer> usuarios = new HashSet<>();
+        Set<Integer> libros = new HashSet<>();
+        for (Prestamo p: prestamos) {
+            if (!usuarios.contains(p.getUsuario().getMatricula())) {
+                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
+                usuarios.add(p.getUsuario().getMatricula());
+            }
+            if (!libros.contains(p.getLibro().getId())) {
+                p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+                libros.add(p.getLibro().getId());
+            }
+        }
         
         return ResponseEntity.ok(pagedResourcesAssemblerPrestamo.toModel(prestamos, prestamoModelAssembler));
     }
@@ -193,7 +206,7 @@ public class UsuarioController {
     }
  
     @GetMapping(value = "/{matricula}/actividad", produces = { "application/json" })
-    public ResponseEntity<Usuario> getActividad(
+    public ResponseEntity<UsuarioActivity> getActividad(
             @PathVariable Integer matricula,
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "2", required = false) int size) {
@@ -204,17 +217,39 @@ public class UsuarioController {
         List<Prestamo> prestamosActuales = prestamoService.buscarPrestamosActuales(matricula);
         List<Prestamo> prestamosHistorial = prestamoService.buscarPrestamosDevueltos(matricula);
 
+        Set<Integer> usuarios = new HashSet<>();
+        Set<Integer> libros = new HashSet<>();
         for (Prestamo p: prestamosActuales) {
-            p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+            if (!libros.contains(p.getLibro().getId())) {
+                p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+                libros.add(p.getLibro().getId());
+            }
+            if (!usuarios.contains(p.getUsuario().getMatricula())) {
+                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
+                usuarios.add(p.getUsuario().getMatricula());
+            }
         }
         for (Prestamo p: prestamosHistorial) {
-            p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+            if (!libros.contains(p.getLibro().getId())) {
+                p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
+                libros.add(p.getLibro().getId());
+            }
+            if (!usuarios.contains(p.getUsuario().getMatricula())) {
+                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
+                usuarios.add(p.getUsuario().getMatricula());
+            }
         }
 
-        usuario.setListaPrestamosActuales(prestamosActuales);
-        usuario.setListaPrestamosDevueltos(prestamosHistorial);
-        usuario.add(linkTo(methodOn(UsuarioController.class).getUsuario(matricula)).withSelfRel());
-        return ResponseEntity.ok(usuario);
+        UsuarioActivity usuarioActivity = new UsuarioActivity();
+        usuarioActivity.setMatricula(matricula);
+        usuarioActivity.setNombre(usuario.getNombre());
+        usuarioActivity.setCorreo(usuario.getCorreo());
+        usuarioActivity.setFechaNacimiento(usuario.getFechaNacimiento());
+        usuarioActivity.setPenalizacion(usuario.getPenalizacion());
+        usuarioActivity.setListaPrestamosActuales(prestamosActuales);
+        usuarioActivity.setListaPrestamosDevueltos(prestamosHistorial);
+        usuarioActivity.add(linkTo(methodOn(UsuarioController.class).getUsuario(matricula)).withSelfRel());
+        return ResponseEntity.ok(usuarioActivity);
     }
                 
 
