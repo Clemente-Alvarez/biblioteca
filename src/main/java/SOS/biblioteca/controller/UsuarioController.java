@@ -142,7 +142,7 @@ public class UsuarioController {
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "8", required = false) int size,
             @RequestParam(defaultValue = "false", required = false) Boolean devuelto,
-            @RequestParam(required = false) @DateTimeFormat(pattern="dd-mm-yyyy") LocalDate fecha) {
+            @RequestParam(required = false) @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate fecha) {
 
         Usuario usuario = service.buscarUsuarioPorMatricula(matricula)
                 .orElseThrow(() -> new UsuarioNotFoundException(matricula));
