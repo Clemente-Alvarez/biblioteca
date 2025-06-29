@@ -1,0 +1,68 @@
+
+LIBROS: 
+[
+  {
+    "isbn": "9788408264194",
+    "titulo": "Cien años de soledad",
+    "autor": "Gabriel García Márquez",
+    "edicion": "ES 12/03/2021",
+    "editorial": "Editorial Planeta",
+    "ejemplares": 5,
+    "disponibles": 5
+  },
+  {
+    "isbn": "9788420412146",
+    "titulo": "El Quijote de la Mancha",
+    "autor": "Miguel de Cervantes",
+    "edicion": "ES 08/11/2020",
+    "editorial": "Alianza Editorial",
+    "ejemplares": 8,
+    "disponibles": 8
+  },
+  {
+    "isbn": "9788437640341",
+    "titulo": "La casa de Bernarda Alba",
+    "autor": "Federico García Lorca",
+    "edicion": "ES 25/09/2022",
+    "editorial": "Editorial Cátedra",
+    "ejemplares": 4,
+    "disponibles": 4
+  },
+  {
+    "isbn": "9788466331128",
+    "titulo": "La sombra del viento",
+    "autor": "Carlos Ruiz Zafón",
+    "edicion": "ES 14/07/2023",
+    "editorial": "Editorial Booket",
+    "ejemplares": 6,
+    "disponibles": 6
+  }
+]
+
+
+
+/libros  POST
+- Si se introduce un libro con el mismo ISBN, se produce un 500 (internal server error), debe producir 409 y devolver mensaje. 
+- Se permite hacer un POST con id definido, y se concede el id si este es el próximo en ser asignado (produce 500
+ si id del cuerpo es 100 y el último id asignado es 3): 
+      { 
+            "id" : "2",
+            "isbn" : "9788030640009", 
+            "titulo" : "otro cuca", 
+            "autor" : "Julio Verne", 
+            "edicion" : "ES 16/05/2019", 
+            "editorial" : "Editorial Cátedra", 
+            "ejemplares" : 3,
+            "disponibles" : 3 
+    } 
+- falta 409 conflict (n de ejemplares y disponibles no son iguales). 
+- falta forbidden (403).
+
+
+/libros GET
+- La búsqueda por titulo no funciona.
+- una búsqueda : http://localhost:8888/libros?page=0&titulo=ñ&size=2&disponible=true, produce un 500. Si quito "disponible", sí funciona.
+
+
+
+
