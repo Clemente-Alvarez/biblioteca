@@ -191,7 +191,7 @@ public class UsuarioController {
                 .orElseThrow(() -> new PrestamoNotFoundException(id));
         if(prestamoId.getUsuarioId() != prestamo.getUsuario().getId()) throw new PrestamoLibroIdException();
         if(prestamoId.getLibroId() != prestamo.getLibro().getId()) throw new PrestamoUsuarioIdException();
-        if(prestamoId.getFechaInicio() != prestamo.getFechaPrestamo()) throw new PrestamoFechaInicioException();
+        if(!prestamoId.getFechaInicio().isEqual(prestamo.getFechaPrestamo())) throw new PrestamoFechaInicioException();
         if(prestamo.getDevuelto()) throw new PrestamoYaDevueltoException(id);
         if(prestamoId.getFechaDevolucion() != null && prestamoId.getFechaPedidoAmpliacion() != null) {
             throw new DevolucionAmpliacionSimultaneaException(id);
