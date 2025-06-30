@@ -199,7 +199,7 @@ public class UsuarioController {
         if(prestamoId.getFechaDevolucion() != null && prestamoId.getFechaAmpliacion() != null) {
             throw new DevolucionAmpliacionSimultaneaException(id);
         }
-        if((prestamoId.getFechaDevolucion() != null && (prestamoId.getFechaPedidoAmpliacion() == null || prestamoId.getFechaAmpliacion() == null)) {
+        if(prestamoId.getFechaDevolucion() != null && (prestamoId.getFechaPedidoAmpliacion() == null || prestamoId.getFechaAmpliacion() == null)) {
             throw new PedidoAmpliacionSinFechaException(id);
         }
         LocalDate dateDevolucionPrestamo = prestamo.getFechaDevolucion();
