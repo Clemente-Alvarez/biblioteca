@@ -49,6 +49,7 @@ public class UsuarioController {
 
     private final UsuarioService service;
     private final LibroService libroService;
+    private final UsuarioService usuarioService;
     private final PrestamoService prestamoService;
     private PagedResourcesAssembler<Usuario> pagedResourcesAssembler;
     private PagedResourcesAssembler<Prestamo> pagedResourcesAssemblerPrestamo;
@@ -57,10 +58,10 @@ public class UsuarioController {
 
     @PostMapping()
     public ResponseEntity<Void> nuevoUsuario(@Valid @RequestBody Usuario newUsuario){
-        if(!service.existeUsuarioPorCorreo(newUsuario.getCorreo())){
+        if(!service.existeUsuarioPorMatricula(newUsuario.getMatricula())){
             Usuario usuario = service.crearUsuario(newUsuario);
 
-            return ResponseEntity.created(linkTo(UsuarioController.class).slash(usuario.getMatricula()).toUri()).build();
+            return ResponseEntity.created(linkTo(UsuarioController.class).slash(usuario.getId()).toUri()).build();
         }
         throw new UsuarioExistsException(newUsuario.getCorreo());
     }
@@ -76,45 +77,46 @@ public class UsuarioController {
         return ResponseEntity.ok(pagedResourcesAssembler.toModel(usuarios, usuarioModelAssembler));
     }
 
-    @GetMapping(value = "/{matricula}", produces = { "application/json" })
-    public ResponseEntity<Usuario> getUsuario(@PathVariable Integer matricula) {
-        Usuario usuario = service.buscarUsuarioPorMatricula(matricula)
-                .orElseThrow(() -> new UsuarioNotFoundException(matricula));
-        usuario.add(linkTo(methodOn(UsuarioController.class).getUsuario(matricula)).withSelfRel());
+    @GetMapping(value = "/{id}", produces = { "application/json" })
+    public ResponseEntity<Usuario> getUsuario(@PathVariable Integer id) {
+        Usuario usuario = service.buscarUsuarioPorId(id)
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
+        usuario.add(linkTo(methodOn(UsuarioController.class).getUsuario(id)).withSelfRel());
         return ResponseEntity.ok(usuario);
     }
 
-    @PutMapping("/{matricula}")
-    public ResponseEntity<Void> replaceUsuario(@Valid @RequestBody Usuario newUsuario, @PathVariable Integer matricula) {
-        service.buscarUsuarioPorMatricula(matricula)
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> replaceUsuario(@Valid @RequestBody Usuario newUsuario, @PathVariable Integer id) {
+        service.buscarUsuarioPorId(id)
                 .map(Usuario -> {
+                    Usuario.setMatricula(newUsuario.getMatricula());
                     Usuario.setNombre(newUsuario.getNombre());
                     Usuario.setFechaNacimiento(newUsuario.getFechaNacimiento());
                     Usuario.setCorreo(newUsuario.getCorreo());
                     Usuario.setPenalizacion(newUsuario.getPenalizacion());
                     return service.crearUsuario(Usuario);
                 })
-                .orElseThrow(() -> new UsuarioNotFoundException(matricula));
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping(value = "/{matricula}")
-    public ResponseEntity<Void> deleteUsuario(@PathVariable Integer matricula) {
-        if (service.existeUsuarioPorMatricula(matricula)) {
-            service.eliminarUsuarioPorMatricula(matricula);
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteUsuario(@PathVariable Integer id) {
+        if (service.existeUsuarioPorId(id)) {
+            service.eliminarUsuarioPorId(id);
         } else {
-            throw new UsuarioNotFoundException(matricula);
+            throw new UsuarioNotFoundException(id);
         }
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{matricula}/prestamos")
+    @PostMapping("/{id}/prestamos")
         @ResponseStatus(HttpStatus.NO_CONTENT)
-        public ResponseEntity<Void> addPrestamo(@PathVariable Integer matricula,
+        public ResponseEntity<Void> addPrestamo(@PathVariable Integer id,
                         @RequestBody PrestamoId nuevoPrestamo) {
                 // Buscar garaje y empleado en la base de datos
-                Usuario usuario = service.buscarUsuarioPorMatricula(matricula)
-                                .orElseThrow(() -> new UsuarioNotFoundException(matricula));
+                Usuario usuario = service.buscarUsuarioPorId(id)
+                                .orElseThrow(() -> new UsuarioNotFoundException(id));
 
                 Libro libro = libroService.buscarLibroPorId(nuevoPrestamo.getLibroId())
                                 .orElseThrow(() -> new LibroNotFoundException(
@@ -125,38 +127,37 @@ public class UsuarioController {
                 LocalDate fecha = nuevoPrestamo.getFechaInicio();
 
                 LocalDate fechaPenalizacion = usuario.getPenalizacion();
-                if(fechaPenalizacion != null && fecha.isBefore(fechaPenalizacion)) throw new UserWithPenaltyException(matricula);
+                if(fechaPenalizacion != null && fecha.isBefore(fechaPenalizacion)) throw new UserWithPenaltyException(id);
                 
-                LocalDate fechaDevolucionReal = nuevoPrestamo.getFechaFin();
                 LocalDate fechaDevolucion = fecha.plusWeeks(2);
                 Prestamo prestamo = prestamoService.crearPrestamo(usuario, libro,
                         fecha, fechaDevolucion, false);
                 libro.setDisponibles(libro.getDisponibles()-1);
                 libroService.crearLibro(libro);
-                return ResponseEntity.created(linkTo(methodOn(UsuarioController.class).getPrestamo(matricula,prestamo.getId())).toUri()).build();
+                return ResponseEntity.created(linkTo(methodOn(UsuarioController.class).getPrestamo(id,prestamo.getId())).toUri()).build();
         }
     
-    @GetMapping(value = "/{matricula}/prestamos", produces = { "application/json" })
+    @GetMapping(value = "/{id}/prestamos", produces = { "application/json" })
     public ResponseEntity<PagedModel<Prestamo>> getPrestamos(
-            @PathVariable Integer matricula,
+            @PathVariable Integer id,
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "8", required = false) int size,
             @RequestParam(defaultValue = "false", required = false) Boolean devuelto,
             @RequestParam(required = false) @DateTimeFormat(pattern="dd-MM-yyyy") LocalDate fecha) {
 
-        Usuario usuario = service.buscarUsuarioPorMatricula(matricula)
-                .orElseThrow(() -> new UsuarioNotFoundException(matricula));
+        Usuario usuario = service.buscarUsuarioPorId(id)
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
 
         Page<Prestamo> prestamos; 
-        if(fecha!=null) prestamos=prestamoService.buscarPrestamosPorFecha(matricula, devuelto, fecha, page, size);
-        else prestamos=prestamoService.buscarPrestamos(matricula, devuelto, page, size);
+        if(fecha!=null) prestamos=prestamoService.buscarPrestamosPorFecha(id, devuelto, fecha, page, size);
+        else prestamos=prestamoService.buscarPrestamos(id, devuelto, page, size);
 
         Set<Integer> usuarios = new HashSet<>();
         Set<Integer> libros = new HashSet<>();
         for (Prestamo p: prestamos) {
-            if (!usuarios.contains(p.getUsuario().getMatricula())) {
-                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
-                usuarios.add(p.getUsuario().getMatricula());
+            if (!usuarios.contains(p.getUsuario().getId())) {
+                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getId())).withSelfRel());
+                usuarios.add(p.getUsuario().getId());
             }
             if (!libros.contains(p.getLibro().getId())) {
                 p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
@@ -167,55 +168,75 @@ public class UsuarioController {
         return ResponseEntity.ok(pagedResourcesAssemblerPrestamo.toModel(prestamos, prestamoModelAssembler));
     }
 
-    @GetMapping(value = "/{matricula}/prestamos/{id}", produces = { "application/json" })
+    @GetMapping(value = "/{usuarioId}/prestamos/{id}", produces = { "application/json" })
     public ResponseEntity<Prestamo> getPrestamo(
-            @PathVariable Integer matricula,
+            @PathVariable Integer usuarioId,
             @PathVariable Integer id) {
 
         Prestamo prestamo = prestamoService.buscarPrestamo(id)
                 .orElseThrow(() -> new PrestamoNotFoundException(id));
-        prestamo.add(linkTo(methodOn(UsuarioController.class).getPrestamo(matricula,id)).withSelfRel());
+        prestamo.add(linkTo(methodOn(UsuarioController.class).getPrestamo(usuarioId,id)).withSelfRel());
         return ResponseEntity.ok(prestamo);
     }
 
-    @PutMapping("/{matricula}/prestamos/{id}")
+    @PutMapping("/{usuarioId}/prestamos/{id}")
     public ResponseEntity<Void> returnPrestamo(@Valid @RequestBody PrestamoId prestamoId, 
-            @PathVariable Integer matricula,
-            @PathVariable Integer id,
-            @RequestParam(defaultValue = "false", required = false) boolean ampliacion) {
-        Usuario usuario = service.buscarUsuarioPorMatricula(matricula)
-                .orElseThrow(() -> new UsuarioNotFoundException(matricula));
+            @PathVariable Integer usuarioId,
+            @PathVariable Integer id) {
+        Usuario usuario = service.buscarUsuarioPorId(usuarioId)
+                .orElseThrow(() -> new UsuarioNotFoundException(usuarioId));
         Libro libro = libroService.buscarLibroPorId(prestamoId.getLibroId())
-                .orElseThrow(() -> new LibroNotFoundException(id));
+                .orElseThrow(() -> new LibroNotFoundException(prestamoId.getLibroId()));
         Prestamo prestamo = prestamoService.buscarPrestamo(id)
                 .orElseThrow(() -> new PrestamoNotFoundException(id));
+        if(prestamoId.getUsuarioId() != prestamo.getUsuario().getId()) throw new PrestamoLibroIdException();
+        if(prestamoId.getLibroId() != prestamo.getLibro().getId()) throw new PrestamoUsuarioIdException();
+        if(prestamoId.getFechaInicio() != prestamo.getFechaPrestamo()) throw new PrestamoFechaInicioException();
+        if(prestamo.getDevuelto()) throw new PrestamoYaDevueltoException(id);
+        if(prestamoId.getFechaDevolucion() != null && prestamoId.getFechaPedidoAmpliacion() != null) {
+            throw new DevolucionAmpliacionSimultaneaException(id);
+        }
+        if(prestamoId.getFechaDevolucion() != null && prestamoId.getFechaAmpliacion() != null) {
+            throw new DevolucionAmpliacionSimultaneaException(id);
+        }
+        if(prestamoId.getFechaPedidoAmpliacion() != null && prestamoId.getFechaAmpliacion() != null) {
+            throw new PedidoAmpliacionSinFechaException(id);
+        }
         LocalDate dateDevolucionPrestamo = prestamo.getFechaDevolucion();
-        if(ampliacion){
-            LocalDate datePedidoAmpliacion = prestamoId.getFechaPedidoAmpliacion();
+        LocalDate datePedidoAmpliacion = prestamoId.getFechaPedidoAmpliacion();
+        if(datePedidoAmpliacion != null){
+            LocalDate dateAmpliacion = prestamoId.getFechaAmpliacion();
             if(dateDevolucionPrestamo.isBefore(datePedidoAmpliacion)) throw new PrestamoTimeLimitExceededException(id);
             LocalDate dateNuevaDevolucion = dateDevolucionPrestamo.plusWeeks(2);
-            prestamoService.crearPrestamo(usuario, 
-                libro,prestamo.getFechaPrestamo(),dateNuevaDevolucion,false);
+            if(!dateAmpliacion.isEqual(dateNuevaDevolucion)) throw new PrestamoAmpliacionNot2WException();
+            prestamo.setFechaDevolucion(dateNuevaDevolucion);
+            prestamoService.crearPrestamo(prestamo);
         }else{
             LocalDate dateDevolucionUsuario = prestamoId.getFechaDevolucion();
-            if(dateDevolucionPrestamo.isBefore(dateDevolucionUsuario)) throw new PrestamoTimeLimitExceededException(id);
+            if(dateDevolucionPrestamo.isBefore(dateDevolucionUsuario)) {
+                usuario.setPenalizacion(dateDevolucionUsuario.plusWeeks(1));
+                usuarioService.crearUsuario(usuario);
+            }
             libro.setDisponibles(libro.getDisponibles()+1);
             libroService.crearLibro(libro);
+            prestamo.setDevuelto(true);
+            prestamo.setFechaDevolucion(dateDevolucionUsuario);
+            prestamoService.crearPrestamo(prestamo);
         }
         return ResponseEntity.noContent().build();
     }
  
-    @GetMapping(value = "/{matricula}/actividad", produces = { "application/json" })
+    @GetMapping(value = "/{id}/actividad", produces = { "application/json" })
     public ResponseEntity<UsuarioActivity> getActividad(
-            @PathVariable Integer matricula,
+            @PathVariable Integer id,
             @RequestParam(defaultValue = "0", required = false) int page,
             @RequestParam(defaultValue = "2", required = false) int size) {
 
-        Usuario usuario = service.buscarUsuarioPorMatricula(matricula)
-                .orElseThrow(() -> new UsuarioNotFoundException(matricula));
+        Usuario usuario = service.buscarUsuarioPorId(id)
+                .orElseThrow(() -> new UsuarioNotFoundException(id));
 
-        List<Prestamo> prestamosActuales = prestamoService.buscarPrestamosActuales(matricula);
-        List<Prestamo> prestamosHistorial = prestamoService.buscarPrestamosDevueltos(matricula);
+        List<Prestamo> prestamosActuales = prestamoService.buscarPrestamosActuales(id);
+        List<Prestamo> prestamosHistorial = prestamoService.buscarPrestamosDevueltos(id);
 
         Set<Integer> usuarios = new HashSet<>();
         Set<Integer> libros = new HashSet<>();
@@ -224,9 +245,9 @@ public class UsuarioController {
                 p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
                 libros.add(p.getLibro().getId());
             }
-            if (!usuarios.contains(p.getUsuario().getMatricula())) {
-                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
-                usuarios.add(p.getUsuario().getMatricula());
+            if (!usuarios.contains(p.getUsuario().getId())) {
+                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getId())).withSelfRel());
+                usuarios.add(p.getUsuario().getId());
             }
         }
         for (Prestamo p: prestamosHistorial) {
@@ -234,21 +255,22 @@ public class UsuarioController {
                 p.getLibro().add(linkTo(methodOn(LibroController.class).getLibro(p.getLibro().getId())).withSelfRel());
                 libros.add(p.getLibro().getId());
             }
-            if (!usuarios.contains(p.getUsuario().getMatricula())) {
-                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getMatricula())).withSelfRel());
-                usuarios.add(p.getUsuario().getMatricula());
+            if (!usuarios.contains(p.getUsuario().getId())) {
+                p.getUsuario().add(linkTo(methodOn(UsuarioController.class).getUsuario(p.getUsuario().getId())).withSelfRel());
+                usuarios.add(p.getUsuario().getId());
             }
         }
 
         UsuarioActivity usuarioActivity = new UsuarioActivity();
-        usuarioActivity.setMatricula(matricula);
+        usuarioActivity.setId(id);
+        usuarioActivity.setMatricula(usuario.getMatricula());
         usuarioActivity.setNombre(usuario.getNombre());
         usuarioActivity.setCorreo(usuario.getCorreo());
         usuarioActivity.setFechaNacimiento(usuario.getFechaNacimiento());
         usuarioActivity.setPenalizacion(usuario.getPenalizacion());
         usuarioActivity.setListaPrestamosActuales(prestamosActuales);
         usuarioActivity.setListaPrestamosDevueltos(prestamosHistorial);
-        usuarioActivity.add(linkTo(methodOn(UsuarioController.class).getUsuario(matricula)).withSelfRel());
+        usuarioActivity.add(linkTo(methodOn(UsuarioController.class).getUsuario(id)).withSelfRel());
         return ResponseEntity.ok(usuarioActivity);
     }
                 

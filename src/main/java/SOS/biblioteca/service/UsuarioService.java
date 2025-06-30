@@ -23,23 +23,19 @@ public class UsuarioService {
         return repository.save(usuario);
     }
 
-    public boolean existeUsuarioPorMatricula(Integer id) {
+    public boolean existeUsuarioPorMatricula(String matricula) {
+        return repository.existsByMatricula(matricula);
+    }
+
+    public boolean existeUsuarioPorId(Integer id) {
         return repository.existsById(id);
     }
 
-    public boolean existeUsuarioPorNombre(String nombre) {
-        return repository.existsByNombre(nombre);
-    }
-
-    public boolean existeUsuarioPorCorreo(String correo) {
-        return repository.existsByCorreo(correo);
-    }
-
-    public Optional<Usuario> buscarUsuarioPorMatricula(Integer id) {
+    public Optional<Usuario> buscarUsuarioPorId(Integer id) {
         return repository.findById(id);
     }
 
-    public void eliminarUsuarioPorMatricula(Integer id) {
+    public void eliminarUsuarioPorId(Integer id) {
         repository.deleteById(id);
     }
     

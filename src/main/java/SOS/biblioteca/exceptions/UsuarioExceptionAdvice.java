@@ -25,6 +25,12 @@ public class UsuarioExceptionAdvice {
     return new ErrorMessage(ex.getMessage());
   }
 
+  @ExceptionHandler(UserWithPenaltyException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  ErrorMessage userPenaltyHandler(UserWithPenaltyException ex) {
+    return new ErrorMessage(ex.getMessage());
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorMessage handleValidationExceptions1(

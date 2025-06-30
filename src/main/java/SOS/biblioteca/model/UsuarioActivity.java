@@ -24,8 +24,9 @@ public class UsuarioActivity extends RepresentationModel<UsuarioActivity>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer matricula;
+    private Integer id;
 
+    private String matricula;
     private String nombre;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")

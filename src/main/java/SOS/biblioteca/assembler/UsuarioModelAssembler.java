@@ -20,7 +20,7 @@ public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<U
     @Override
     public Usuario toModel(Usuario entity) {
 
-        entity.add(linkTo(methodOn(UsuarioController.class).getUsuario(entity.getMatricula())).withSelfRel());
+        entity.add(linkTo(methodOn(UsuarioController.class).getUsuario(entity.getId())).withSelfRel());
         return entity;
     }
 }

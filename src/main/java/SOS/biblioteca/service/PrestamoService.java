@@ -58,5 +58,9 @@ public class PrestamoService {
         return repository.save(prestamo);
     }
 
+    public Prestamo crearPrestamo(Prestamo prestamo) {
+        return repository.save(prestamo);
+    }
+
 }
 

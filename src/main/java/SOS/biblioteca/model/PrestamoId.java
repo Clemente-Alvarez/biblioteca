@@ -18,11 +18,12 @@ public class PrestamoId  {
     @NotNull(message = "El usuarioId es obligatorio y no puede ser null")
     private Integer usuarioId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @NotNull(message = "ELa fecha de inicio de prestamo es obligatorio y no puede ser null")
     private LocalDate fechaInicio;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private LocalDate fechaFin;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate fechaDevolucion;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate fechaPedidoAmpliacion;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate fechaAmpliacion;
 }

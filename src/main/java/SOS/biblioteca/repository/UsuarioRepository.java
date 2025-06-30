@@ -9,11 +9,6 @@ import SOS.biblioteca.model.Usuario;
 
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
-
-    // Buscar si existe por nombre de usuario
-    // El nombre del campo tiene que ser el mismo que el campo de la tabla
-    boolean existsByNombre(String nombre);
-    Optional<Usuario> findByMatricula(Integer id);
-    boolean existsByCorreo(String correo);
+    boolean existsByMatricula(String matricula);
 
 }

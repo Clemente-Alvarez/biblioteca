@@ -34,16 +34,20 @@ public class LibroExceptionAdvice {
     }
 
     @ExceptionHandler(DisponiblesInsuficientesException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     ErrorMessage disponiblesInsuficientesMismatchHandler(DisponiblesInsuficientesException ex) {
         return new ErrorMessage(ex.getMessage());
     }
 
     @ExceptionHandler(EjemplarPrestadoException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     ErrorMessage ejemplarPrestadoHandler(EjemplarPrestadoException ex) {
         return new ErrorMessage(ex.getMessage());
     }
 
-    
+    @ExceptionHandler(EjemplarNotAvailableException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    ErrorMessage ejemplarNotAvailableHandler(EjemplarNotAvailableException ex) {
+        return new ErrorMessage(ex.getMessage());
+    }
 }

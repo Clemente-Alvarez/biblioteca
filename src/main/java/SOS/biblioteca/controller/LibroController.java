@@ -41,7 +41,6 @@ public class LibroController {
     public ResponseEntity<Void> nuevoLibro(@Valid @RequestBody Libro newLibro){
         if(newLibro.getId()!=null) throw new LibroIdNotNullException();
         if(service.existeLibroPorIsbn(newLibro.getIsbn())) throw new LibroExistsException(newLibro.getIsbn());
-        if(newLibro.getEjemplares()!=newLibro.getDisponibles()) throw new EjemplaresDisponiblesMismatchException();
         newLibro.setDisponibles(newLibro.getEjemplares());
         Libro libro = service.crearLibro(newLibro);
         return ResponseEntity.created(linkTo(LibroController.class).slash(libro.getId()).toUri()).build();
